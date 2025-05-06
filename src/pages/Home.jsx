@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { FaGithub, FaLinkedin, FaFileAlt, FaArrowRight } from "react-icons/fa";
+import { FaFileAlt, FaArrowRight } from "react-icons/fa";
 import developerImage from "../assets/software-developer.png";
 import styles from "./Home.module.css";
 
@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
-      <section className={styles.hero} ref={heroRef}>
+      <section className={styles.hero} ref={heroRef} aria-label="Hero section">
         <div className={styles.container}>
           <div className={styles.content}>
             <h1
@@ -38,7 +38,9 @@ const Home = () => {
               <span className={styles.greeting}>Hi, I'm</span>
               <span className={styles.name}>Rouni Gorgees</span>
             </h1>
-
+            <p className={styles.tagline} style={{ animationDelay: "0.3s" }}>
+              Turning ideas into interactive web experiences.
+            </p>
             <h2
               className={`${styles.subtitle} ${styles.animateItem}`}
               style={{ animationDelay: "0.4s" }}
@@ -46,7 +48,6 @@ const Home = () => {
               <span className={styles.role}>Software Developer</span>
               <span className={styles.based}>Based in Ontario, Canada</span>
             </h2>
-
             <p
               className={`${styles.description} ${styles.animateItem}`}
               style={{ animationDelay: "0.6s" }}
@@ -55,12 +56,19 @@ const Home = () => {
               technologies. Specializing in creating beautiful, responsive, and
               user-friendly applications that solve real-world problems.
             </p>
-
+            <div className={styles.currentlyWorking}>
+              <strong>Currently working on:</strong> Portfolio improvements,
+              React projects, and UI/UX design.
+            </div>
             <div
               className={`${styles.cta} ${styles.animateItem}`}
               style={{ animationDelay: "0.8s" }}
             >
-              <Link to="/projects" className={styles.primaryButton}>
+              <Link
+                to="/projects"
+                className={styles.primaryButton}
+                aria-label="View My Work"
+              >
                 View My Work <FaArrowRight className={styles.btnIcon} />
               </Link>
               <a
@@ -68,19 +76,20 @@ const Home = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.secondaryButton}
+                aria-label="Resume"
               >
                 <FaFileAlt className={styles.btnIcon} /> Resume
               </a>
             </div>
-
             <div
               className={`${styles.socialLinks} ${styles.animateItem}`}
               style={{ animationDelay: "1s" }}
             >
-              {/* Removed GitHub and LinkedIn social links as requested */}
+              {/* <a href="https://yourblog.com" target="_blank" rel="noopener noreferrer" aria-label="Blog" className={styles.socialLink}>
+                <FaBlog size={22} />
+              </a> */}
             </div>
           </div>
-
           <div
             className={`${styles.heroImage} ${styles.animateItem}`}
             style={{ animationDelay: "0.4s" }}
@@ -90,7 +99,6 @@ const Home = () => {
               alt="Rouni Gorgees - Software Developer"
               className={styles.developerImage}
             />
-
             <div className={styles.blob}></div>
           </div>
         </div>
