@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { FaFileAlt, FaArrowRight } from "react-icons/fa";
+import { FaFileAlt, FaArrowRight, FaCode } from "react-icons/fa";
 import developerImage from "../assets/software-developer.png";
 import styles from "./Home.module.css";
+import useGithubBio from "../hooks/useGithubBio";
 
 const Home = () => {
   const heroRef = useRef(null);
+  const { githubBio, bioLoading, bioError, githubInfo } = useGithubBio();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -56,10 +58,38 @@ const Home = () => {
               technologies. Specializing in creating beautiful, responsive, and
               user-friendly applications that solve real-world problems.
             </p>
-            <div className={styles.currentlyWorking}>
-              <strong>Currently working on:</strong> Portfolio improvements,
-              React projects, and UI/UX design.
+
+            <div
+              className={`${styles.githubActivity} ${styles.animateItem}`}
+              style={{ animationDelay: "0.7s" }}
+            >
+              <strong>Currently working on:</strong>
+              <div className={styles.currentlyWorking}>
+                {bioLoading ? (
+                  <span>Loading GitHub activity...</span>
+                ) : bioError ? (
+                  <span style={{ color: "#e53e3e" }}>{bioError}</span>
+                ) : githubBio ? (
+                  <div>
+                    <span>{githubBio}</span>
+                    {githubInfo.latestRepo && (
+                      <a
+                        href={`https://github.com/ronniegrg/${githubInfo.latestRepo}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.repoLink}
+                      >
+                        <FaCode className={styles.inlineIcon} />{" "}
+                        {githubInfo.latestRepo}
+                      </a>
+                    )}
+                  </div>
+                ) : (
+                  <span>No current activity on GitHub.</span>
+                )}
+              </div>
             </div>
+
             <div
               className={`${styles.cta} ${styles.animateItem}`}
               style={{ animationDelay: "0.8s" }}
@@ -72,7 +102,7 @@ const Home = () => {
                 View My Work <FaArrowRight className={styles.btnIcon} />
               </Link>
               <a
-                href="/resume.pdf"
+                href="/Rouni Gorgees.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.secondaryButton}
@@ -85,9 +115,7 @@ const Home = () => {
               className={`${styles.socialLinks} ${styles.animateItem}`}
               style={{ animationDelay: "1s" }}
             >
-              {/* <a href="https://yourblog.com" target="_blank" rel="noopener noreferrer" aria-label="Blog" className={styles.socialLink}>
-                <FaBlog size={22} />
-              </a> */}
+              {/* Social links will go here if needed in the future */}
             </div>
           </div>
           <div

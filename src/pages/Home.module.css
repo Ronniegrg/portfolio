@@ -197,6 +197,11 @@
   transform: translateY(-1px);
 }
 
+.primaryButton:hover,
+.primaryButton:active {
+  color: #fff !important;
+}
+
 .secondaryButton {
   background: transparent;
   color: var(--primary-color);
@@ -304,6 +309,54 @@
   padding: 0.7rem 1rem;
   border-radius: 0.5rem;
   font-style: italic;
+}
+
+.githubActivity {
+  margin-bottom: 2rem;
+}
+
+.githubActivity strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.repoLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-color);
+  border-radius: 0.4rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.repoLink:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateY(-2px);
+}
+
+.inlineIcon {
+  font-size: 0.8rem;
+}
+
+.currentlyWorking div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.currentlyWorking div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 @media (max-width: 1024px) {

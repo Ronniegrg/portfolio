@@ -28,9 +28,9 @@ const About = () => {
     {
       id: 1,
       degree: "Bachelor of Science in Computer Science",
-      institution: "University Name",
-      location: "City, Country",
-      duration: "2018 - 2022",
+      institution: "Mohawk College",
+      location: "Hamilton, Ontario, Canada",
+      duration: "2013 - 2018",
       description:
         "Graduated with honors. Focused on software development, database management, and web technologies.",
       achievements: ["Dean's List: 2020-2022", "Best Senior Project Award"],
@@ -326,8 +326,9 @@ const About = () => {
                 {Object.entries(skillCategories).map(([key, category]) => (
                   <button
                     key={key}
-                    className={`${styles.skillTab} ${activeSkillTab === key ? styles.activeTab : ""
-                      }`}
+                    className={`${styles.skillTab} ${
+                      activeSkillTab === key ? styles.activeTab : ""
+                    }`}
                     onClick={() => setActiveSkillTab(key)}
                   >
                     <span className={styles.tabIcon}>{category.icon}</span>
@@ -352,10 +353,10 @@ const About = () => {
                             {skill.level >= 90
                               ? "Expert"
                               : skill.level >= 70
-                                ? "Advanced"
-                                : skill.level >= 50
-                                  ? "Intermediate"
-                                  : "Beginner"}
+                              ? "Advanced"
+                              : skill.level >= 50
+                              ? "Intermediate"
+                              : "Beginner"}
                           </span>
                         </div>
                         <div className={styles.skillBar}>
@@ -373,13 +374,14 @@ const About = () => {
                               key={i}
                               className={`
                                                             ${styles.star}
-                                                            ${i <
-                                  Math.round(
-                                    skill.level / 20
-                                  )
-                                  ? styles.filledStar
-                                  : ""
-                                }
+                                                            ${
+                                                              i <
+                                                              Math.round(
+                                                                skill.level / 20
+                                                              )
+                                                                ? styles.filledStar
+                                                                : ""
+                                                            }
                                                         `}
                             />
                           ))}

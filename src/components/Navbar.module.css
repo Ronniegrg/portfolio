@@ -6,6 +6,7 @@
   z-index: 1000;
   background-color: var(--nav-bg);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   transition: all 0.3s ease;
   padding: 0.75rem 0;
 }
@@ -162,6 +163,7 @@
     bottom: 0;
     background-color: var(--nav-bg);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     flex-direction: column;
     justify-content: center;
     align-items: center;
