@@ -1,0 +1,475 @@
+.contributionsWrapper {
+  width: 100%;
+  background-color: var(--bg-primary);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.contributionsSection {
+  padding: 1.5rem;
+}
+
+/* Profile Section */
+.profileSummary {
+  margin-bottom: 2rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.profileHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.profileAvatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 1rem;
+  border: 2px solid var(--primary-color);
+}
+
+.profileAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileInfo {
+  flex: 1;
+}
+
+.profileName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.profileUsername {
+  color: var(--primary-color);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.profileBio {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.statItem {
+  text-align: center;
+  background-color: var(--bg-primary);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.statItem:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.statValue {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.statLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.languagesContainer {
+  margin-top: 1.5rem;
+}
+
+.languagesTitle {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.languageTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.languageTag {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.languageTag:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Calendar Section */
+.calendarContainer {
+  position: relative;
+  width: 100%;
+  padding-top: 2.5rem;
+  margin-bottom: 2rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.calendarTitle {
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.monthLabels {
+  display: flex;
+  position: relative;
+  height: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.monthLabel {
+  position: absolute;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  transform: translateX(-50%);
+}
+
+.calendar {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 0.75rem;
+  height: 7rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.weeks {
+  display: flex;
+  flex-grow: 1;
+  gap: 3px;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.day {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.day:hover {
+  transform: scale(1.3);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.legendLabel {
+  margin: 0 0.5rem;
+}
+
+.legendCells {
+  display: flex;
+  gap: 3px;
+}
+
+.legendCell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid var(--border-color);
+}
+
+.gitHubNote {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin-top: 1rem;
+}
+
+/* Activity Section */
+.recentActivity {
+  margin-top: 2rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.activityTitle {
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  color: var(--text-primary);
+}
+
+.activityList {
+  list-style: none;
+  padding: 0;
+}
+
+.activityItem {
+  display: flex;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityItem:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.activityIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--bg-tertiary);
+  border-radius: 50%;
+  margin-right: 1rem;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.activityContent {
+  flex: 1;
+}
+
+.activityHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.activityType {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.activityDate {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.activityDetails {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.repoLink {
+  color: var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.repoLink:hover {
+  text-decoration: underline;
+}
+
+/* Loading and Error States */
+.loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  min-height: 200px;
+  text-align: center;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  border: 3px solid var(--bg-tertiary);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.errorContainer {
+  color: #e53e3e;
+  gap: 0.75rem;
+}
+
+.errorIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.viewProfileButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.viewProfileButton:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .weeks {
+    gap: 2px;
+  }
+
+  .week {
+    gap: 2px;
+  }
+
+  .day {
+    width: 10px;
+    height: 10px;
+  }
+
+  .activityItem {
+    flex-direction: column;
+  }
+
+  .activityIcon {
+    margin-bottom: 0.5rem;
+    margin-right: 0;
+  }
+
+  .activityHeader {
+    flex-direction: column;
+  }
+}
+
+.ghchartWrapper {
+  background: #181f2a;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.18);
+  padding: 2.5rem 1.5rem 2rem 1.5rem;
+  margin: 2rem auto 2.5rem auto;
+  max-width: 900px;
+  transition: box-shadow 0.2s;
+}
+
+.ghchartWrapper:hover {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.28);
+}
+
+.ghchartWrapper h3 {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 0.3rem;
+}
+
+.ghchartWrapper img {
+  background: #222;
+  border-radius: 10px;
+  padding: 12px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: block;
+}
+
+.ghchartWrapper p {
+  text-align: center;
+  margin-top: 18px;
+}
+
+.ghchartWrapper a {
+  color: #3b82f6;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px dashed #3b82f6;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+
+.ghchartWrapper a:hover {
+  color: #60a5fa;
+  border-bottom: 2px solid #60a5fa;
+}

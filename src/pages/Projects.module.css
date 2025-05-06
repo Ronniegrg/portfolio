@@ -1,0 +1,552 @@
+.projects {
+  padding: 120px 0 60px;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fadeIn {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.fadeInUp {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.title {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--primary-color);
+  position: relative;
+  display: inline-block;
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 4px;
+  background-color: var(--primary-color);
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.intro {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.projectsSection {
+  margin-top: 3rem;
+}
+
+.projectCount {
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--text-secondary);
+  margin-left: 0.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+.projectCard {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-top: 4px solid var(--primary-color);
+}
+
+.projectCard:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+.content {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
+.projectTitle {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.forkedLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+}
+
+.projectMeta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.projectDescription {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.projectDates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: var(--spacing-md);
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+}
+
+.dateItem {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dateIcon {
+  color: var(--primary-color);
+}
+
+.technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+}
+
+.techTag {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.techTag:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.links {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: auto;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.link:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.demoLink {
+  background-color: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.demoLink:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.loadingProjects,
+.projectsError,
+.noProjects {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  margin-top: 2rem;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  border: 3px solid var(--bg-tertiary);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.projectsError {
+  color: #e53e3e;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .projectMeta {
+    justify-content: flex-start;
+  }
+}
+
+.githubSection {
+  background-color: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 4rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.githubSection:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Calendar Container Styles */
+.calendarContainer {
+  margin-top: 1.5rem;
+  background-color: var(--bg-primary);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.calendarWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 170px;
+  transition: opacity 0.3s ease;
+}
+
+.calendarWrapper.hidden {
+  display: none;
+}
+
+.calendarLoading,
+.calendarError {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  min-height: 170px;
+  width: 100%;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  border: 3px solid var(--bg-tertiary);
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.calendarError {
+  color: #e53e3e;
+  gap: 0.75rem;
+}
+
+.errorIcon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.viewProfileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.viewProfileLink:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.calendarFooter {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+/* GitHub Calendar Custom Styles */
+.githubCalendar {
+  width: 100%;
+  max-width: 900px;
+}
+
+/* Ensure that the calendar is visible in both light and dark modes */
+:global(.react-github-calendar__calendar) {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0 auto;
+  color: var(--text-primary) !important;
+}
+
+:global(.react-github-calendar__item) {
+  border: 1px solid var(--border-color);
+}
+
+:global(.react-github-calendar__day) {
+  transition: all 0.2s ease;
+  border-radius: 2px !important;
+}
+
+:global(.react-github-calendar__day:hover) {
+  transform: scale(1.2);
+}
+
+/* Fix calendar colors for dark theme */
+.dark :global(.react-github-calendar__day) {
+  stroke: var(--bg-tertiary) !important;
+}
+
+.dark :global(.react-github-calendar text) {
+  fill: var(--text-primary) !important;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sectionTitle::after {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 3px;
+  background-color: var(--primary-color);
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+.yearSelector {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.yearSelect {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--primary-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.yearSelect:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.calendarContainer {
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+/* GitHub Calendar Custom Styles */
+:global(.react-github-calendar__calendar) {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0 auto;
+}
+
+:global(.react-github-calendar__day) {
+  transition: all 0.2s ease;
+}
+
+:global(.react-github-calendar__day:hover) {
+  transform: scale(1.2);
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .intro {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .githubSection {
+    padding: 1.5rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .calendarContainer {
+    padding: 0.5rem;
+  }
+}

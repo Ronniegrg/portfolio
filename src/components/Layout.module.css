@@ -1,0 +1,18 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  flex: 1;
+  padding-top: 80px; /* Account for fixed navbar */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+} 
