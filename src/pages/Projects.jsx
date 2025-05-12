@@ -11,7 +11,8 @@ import GitHubContributions from "../components/GitHubContributions";
 import styles from "./Projects.module.css";
 
 const Projects = () => {
-  const [year] = useState(new Date().getFullYear());
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [allYears, setAllYears] = useState([]);
   const [inView, setInView] = useState(false);
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,6 +42,32 @@ const Projects = () => {
       }
     };
   }, []);
+
+  // Fetch all years from repos
+  useEffect(() => {
+    const fetchYears = async () => {
+      try {
+        const response = await fetch(
+          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`
+        );
+        if (!response.ok) return;
+        const repos = await response.json();
+        const yearsSet = new Set();
+        repos.forEach((repo) => {
+          yearsSet.add(new Date(repo.created_at).getFullYear());
+          yearsSet.add(new Date(repo.updated_at).getFullYear());
+        });
+        const yearsArr = Array.from(yearsSet).sort((a, b) => b - a);
+        setAllYears(yearsArr);
+        // If current year not in repos, default to most recent year
+        if (!yearsArr.includes(year)) setYear(yearsArr[0]);
+      } catch (e) {
+        // fallback: just show current year
+        setAllYears([year]);
+      }
+    };
+    fetchYears();
+  }, [GITHUB_USERNAME]);
 
   // Fetch GitHub repositories based on year
   useEffect(() => {
@@ -159,12 +186,46 @@ const Projects = () => {
         </div>
 
         <div className={styles.projectsSection}>
-          <h2 className={styles.sectionTitle}>
-            Projects in {year}
-            <span className={styles.projectCount}>
-              ({projects.length} repositories)
-            </span>
-          </h2>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem",
+              marginBottom: 16,
+            }}
+          >
+            <h2
+              className={styles.sectionTitle}
+              style={{
+                marginBottom: 0,
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem",
+              }}
+            >
+              Projects in
+              <select
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: 700,
+                  borderRadius: 6,
+                  padding: "2px 8px",
+                  marginLeft: 8,
+                }}
+              >
+                {allYears.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.projectCount} style={{ marginLeft: 8 }}>
+                ({projects.length} repositories)
+              </span>
+            </h2>
+          </div>
 
           {isLoading ? (
             <div className={styles.loadingProjects}>

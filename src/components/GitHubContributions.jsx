@@ -11,7 +11,7 @@ const GitHubContributions = ({ username = "Ronniegrg" }) => {
       <div style={{ display: "flex", justifyContent: "center" }}>
         <GitHubCalendar username={username} />
       </div>
-      <p style={{ textAlign: "center", marginTop: 12, color: "#aaa" }}>
+      <p style={{ textAlign: "center", marginTop: 12, color: "#fff" }}>
         <a
           href={`https://github.com/${username}`}
           target="_blank"

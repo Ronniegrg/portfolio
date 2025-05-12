@@ -473,3 +473,31 @@
   color: #60a5fa;
   border-bottom: 2px solid #60a5fa;
 }
+
+/* Make month labels and contribution count text visible on dark backgrounds */
+.ghchartWrapper text,
+.ghchartWrapper .contrib-number,
+.ghchartWrapper .react-github-calendar__month,
+.ghchartWrapper .react-github-calendar__legend,
+.ghchartWrapper span,
+.ghchartWrapper rect[fill="#ebedf0"] + text {
+  fill: #fff !important; /* For SVG text */
+  color: #fff !important; /* For HTML text */
+  opacity: 1 !important;
+}
+
+/* Force contribution count text to be white */
+.ghchartWrapper span,
+.ghchartWrapper .contrib-number,
+.ghchartWrapper .react-github-calendar__count {
+  color: #fff !important;
+  fill: #fff !important;
+  opacity: 1 !important;
+}
+
+/* Force all direct children of .ghchartWrapper to have white text for visibility */
+.ghchartWrapper > * {
+  color: #fff !important;
+  fill: #fff !important;
+  opacity: 1 !important;
+}
