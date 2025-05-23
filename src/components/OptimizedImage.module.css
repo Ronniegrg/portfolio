@@ -1,0 +1,62 @@
+.imageContainer {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.loaded {
+  opacity: 1;
+}
+
+.placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f0f0;
+  z-index: 1;
+}
+
+:global(.dark) .placeholder {
+  background-color: #2a2a2a;
+}
+
+.blur {
+  backdrop-filter: blur(10px);
+}
+
+.errorContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f8f8;
+  z-index: 2;
+}
+
+:global(.dark) .errorContainer {
+  background-color: #333;
+}
+
+.errorText {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+:global(.dark) .errorText {
+  color: #ccc;
+}

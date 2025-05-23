@@ -7,6 +7,16 @@
   padding: 0;
 }
 
+/* Accessibility - Focus styles only for keyboard users */
+*:focus {
+  outline: none;
+}
+
+body.keyboard-user *:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
 /* Base Styles */
 html,
 body {

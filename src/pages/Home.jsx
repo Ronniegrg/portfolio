@@ -5,6 +5,7 @@ import developerImage from "../assets/software-developer.png";
 import styles from "./Home.module.css";
 import useGithubBio from "../hooks/useGithubBio";
 import { Helmet } from "react-helmet-async";
+import StructuredData from "../components/StructuredData";
 
 const Home = () => {
   const heroRef = useRef(null);
@@ -51,25 +52,38 @@ const Home = () => {
           property="og:image"
           content="https://ronniegrg.github.io/rg-logo.svg"
         />
-        <script type="application/ld+json">{`
-          {
-            "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Rouni Gorgees",
-            "jobTitle": "Software Developer",
-            "url": "https://ronniegrg.github.io/",
-            "sameAs": [
-              "https://github.com/Ronniegrg",
-              "https://www.linkedin.com/in/rouni-gorgees-207b56167/"
-            ],
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Ontario",
-              "addressCountry": "Canada"
-            }
-          }
-        `}</script>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Rouni Gorgees | Software Developer Portfolio"
+        />
+        <meta
+          name="twitter:description"
+          content="Portfolio of Rouni Gorgees, a software developer based in Ontario, Canada. Explore projects, skills, and contact information."
+        />
+        <meta
+          name="twitter:image"
+          content="https://ronniegrg.github.io/rg-logo.svg"
+        />
       </Helmet>
+      <StructuredData
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Rouni Gorgees",
+          jobTitle: "Software Developer",
+          url: "https://ronniegrg.github.io/",
+          sameAs: [
+            "https://github.com/Ronniegrg",
+            "https://www.linkedin.com/in/rouni-gorgees-207b56167/",
+          ],
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Ontario",
+            addressCountry: "Canada",
+          },
+        }}
+      />
       <div className={styles.home}>
         <section
           className={styles.hero}

@@ -22,10 +22,16 @@ const useGithubBio = (username = "ronniegrg") => {
         setBioLoading(true);
         setBioError(null);
 
-        // Fetch user profile information
+        // Fetch user profile information with a timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
         const userResponse = await fetch(
-          `https://api.github.com/users/${username}`
+          `https://api.github.com/users/${username}`,
+          { signal: controller.signal }
         );
+
+        clearTimeout(timeoutId);
 
         if (!userResponse.ok) {
           throw new Error(

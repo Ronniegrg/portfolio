@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import Layout from "./components/Layout";
+import usePerformanceMonitoring from "./hooks/usePerformanceMonitoring";
 import "./styles/global.css";
 
 const Home = lazy(() => import("./pages/Home"));
@@ -10,6 +11,17 @@ const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
+  // Monitor performance metrics
+  const metrics = usePerformanceMonitoring();
+
+  // Log metrics when they change (in development only)
+  useEffect(() => {
+    // Check if we're in development mode
+    if (import.meta.env.DEV) {
+      console.log("Performance metrics:", metrics);
+    }
+  }, [metrics]);
+
   return (
     <Suspense
       fallback={
