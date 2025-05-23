@@ -1,8 +1,8 @@
 .about {
   padding: 6rem 0 2rem;
   min-height: 100vh;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .container {
@@ -24,7 +24,7 @@
 }
 
 .card {
-  background-color: var(--card-background);
+  background-color: var(--card-bg);
   border-radius: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -69,7 +69,7 @@
 .educationItem h3 {
   font-size: 1.3rem;
   margin-bottom: 0.5rem;
-  color: var(--text-color);
+  color: var(--text-primary);
 }
 
 .institution {
@@ -110,7 +110,7 @@
 }
 
 .skillCategory {
-  background-color: var(--background-color);
+  background-color: var(--bg-primary);
   padding: 1.5rem;
   border-radius: 0.5rem;
   transition: transform 0.3s ease;
@@ -134,7 +134,7 @@
 .skillCategory li {
   margin-bottom: 0.5rem;
   font-size: 1rem;
-  color: var(--text-color);
+  color: var(--text-primary);
   position: relative;
   padding-left: 1.2rem;
 }
@@ -155,7 +155,7 @@
 }
 
 .timelineContent {
-  background-color: var(--background-color);
+  background-color: var(--bg-primary);
   padding: 1.5rem;
   border-radius: 0.5rem;
   transition: transform 0.3s ease;
@@ -168,7 +168,7 @@
 .timelineContent h3 {
   font-size: 1.3rem;
   margin-bottom: 0.5rem;
-  color: var(--text-color);
+  color: var(--text-primary);
 }
 
 .company {
@@ -301,8 +301,9 @@
     var(--accent-color)
   );
   border-radius: 4px;
-  width: 0;
-  animation: progressAnimation 1s ease-out forwards;
+  transition: width 1s ease-out;
+  transform-origin: left;
+  transform: scaleX(1);
 }
 
 .skillStars {
@@ -319,15 +320,6 @@
 
 .filledStar {
   color: var(--primary-color);
-}
-
-@keyframes progressAnimation {
-  from {
-    width: 0;
-  }
-  to {
-    width: var(--width, 0);
-  } /* This will be set inline */
 }
 
 @keyframes fadeIn {
@@ -611,7 +603,7 @@
 }
 
 .experienceCard {
-  background: var(--card-background);
+  background: var(--card-bg);
   border-radius: 1rem;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -622,13 +614,17 @@
 }
 
 .experienceCard::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 4px;
   height: 100%;
-  background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+  background: linear-gradient(
+    to bottom,
+    var(--primary-color),
+    var(--accent-color)
+  );
   opacity: 0.8;
 }
 
@@ -719,7 +715,7 @@
 }
 
 .responsibilityItem::before {
-  content: '→';
+  content: "→";
   position: absolute;
   left: 0;
   color: var(--primary-color);
@@ -778,9 +774,15 @@
   animation: slideIn 0.5s ease-out forwards;
 }
 
-.experienceCard:nth-child(1) { animation-delay: 0.1s; }
-.experienceCard:nth-child(2) { animation-delay: 0.2s; }
-.experienceCard:nth-child(3) { animation-delay: 0.3s; }
+.experienceCard:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.experienceCard:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.experienceCard:nth-child(3) {
+  animation-delay: 0.3s;
+}
 
 @media (max-width: 768px) {
   .experienceHeader {
