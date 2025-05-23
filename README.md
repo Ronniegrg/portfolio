@@ -6,13 +6,15 @@ A modern, responsive portfolio website built with React, showcasing my skills, p
 
 - **Modern Design**: Clean and professional UI with smooth animations
 - **Responsive Layout**: Fully responsive design that works on all devices
+- **Accessible**: Keyboard navigation, skip link, and good color contrast
 - **Interactive Elements**: Engaging animations and hover effects
 - **Project Showcase**: Detailed project cards with GitHub links
 - **Skills Visualization**: Interactive skills section with proficiency levels
 - **Experience Timeline**: Professional experience with company details
 - **Education Section**: Academic background and certifications
-- **Contact Form**: Easy way to get in touch
+- **Contact Form**: Easy way to get in touch (with EmailJS integration)
 - **Dark/Light Mode**: Theme switching functionality
+- **PWA Ready**: Favicon, manifest, and installable on mobile
 
 ## 🛠️ Tech Stack
 
@@ -22,6 +24,14 @@ A modern, responsive portfolio website built with React, showcasing my skills, p
 - **Animations**: CSS Animations
 - **Routing**: React Router
 - **Deployment**: Vercel/Netlify
+
+## 🆕 Recent Improvements
+
+- Added a "Skip to content" link for accessibility
+- Moved EmailJS public key to environment variable (`.env`)
+- Added favicon (SVG & PNG) and web app manifest for PWA support
+- Apple touch icon for iOS
+- Ready for privacy-friendly analytics (Plausible/Fathom)
 
 ## 📦 Installation
 
@@ -38,13 +48,19 @@ A modern, responsive portfolio website built with React, showcasing my skills, p
    npm install
    ```
 
-3. Start the development server:
+3. Create a `.env` file in the project root:
+
+   ```env
+   VITE_EMAILJS_PUBLIC_KEY=your_emailjs_public_key
+   ```
+
+4. Start the development server:
 
    ```bash
    npm run dev
    ```
 
-4. Build for production:
+5. Build for production:
    ```bash
    npm run build
    ```
@@ -53,18 +69,27 @@ A modern, responsive portfolio website built with React, showcasing my skills, p
 
 ```
 portfolio/
-├── public/              # Static assets
-│   ├── src/
-│   │   ├── assets/         # Images and other media
-│   │   ├── components/     # Reusable components
-│   │   ├── pages/          # Page components
-│   │   ├── styles/         # Global styles
-│   │   ├── App.jsx         # Main App component
-│   │   └── main.jsx        # Entry point
-│   ├── .gitignore
-│   ├── index.html
-│   ├── package.json
-│   └── README.md
+├── public/              # Static assets (favicon, manifest, PDFs, etc.)
+│   ├── rg-logo.svg      # Main logo (SVG)
+│   ├── rg-logo-192.png  # Favicon/manifest icon (192x192)
+│   ├── rg-logo-512.png  # Manifest icon (512x512)
+│   ├── manifest.webmanifest # Web app manifest
+│   └── ...
+├── src/
+│   ├── assets/         # Images and other media
+│   ├── components/     # Reusable components
+│   ├── context/        # React context providers
+│   ├── data/           # Data files
+│   ├── hooks/          # Custom hooks
+│   ├── pages/          # Page components
+│   ├── styles/         # Global styles
+│   ├── App.jsx         # Main App component
+│   └── main.jsx        # Entry point
+├── .env                # Environment variables (not committed)
+├── .gitignore
+├── index.html
+├── package.json
+├── README.md
 └── vite.config.js
 ```
 
@@ -73,7 +98,7 @@ portfolio/
 - **Home**: Hero section with introduction
 - **About**: Professional background and skills
 - **Projects**: Portfolio of work
-- **Contact**: Get in touch form
+- **Contact**: Get in touch form (uses EmailJS, see .env)
 - **Footer**: Social links and copyright
 
 ## 🎨 Styling Features
@@ -92,6 +117,8 @@ portfolio/
 3. Add/remove projects in the Projects component
 4. Update skills and experience in the About component
 5. Customize animations in the CSS modules
+6. Update favicon/logo in `public/`
+7. Update manifest in `public/manifest.webmanifest`
 
 ## 📱 Responsive Design
 
@@ -100,6 +127,24 @@ portfolio/
 - Flexible grid layouts
 - Adaptive typography
 - Touch-friendly interactions
+
+## 🌐 PWA & Favicon
+
+- Favicon and manifest icons are in `public/` (SVG and PNG)
+- `manifest.webmanifest` enables installability and PWA features
+- Apple touch icon for iOS support
+
+## 🔒 Environment Variables
+
+- **EmailJS**: Store your public key in `.env` as `VITE_EMAILJS_PUBLIC_KEY`
+- **Never commit your `.env` file** (it's in `.gitignore`)
+
+## 📊 Analytics (Optional)
+
+To add privacy-friendly analytics (like Plausible or Fathom):
+
+1. Sign up at [plausible.io](https://plausible.io/) or [usefathom.com](https://usefathom.com/)
+2. Add their script to `index.html` with your domain when ready
 
 ## 🚀 Deployment
 
