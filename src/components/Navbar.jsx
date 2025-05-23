@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
 import { useTheme } from "../context/ThemeContext";
@@ -7,6 +7,8 @@ import styles from "./Navbar.module.css";
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuButtonRef = useRef(null);
+  const menuRef = useRef(null);
   const location = useLocation();
   const { isDarkMode, toggleTheme } = useTheme();
 
@@ -23,6 +25,36 @@ const Navbar = () => {
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location]);
+
+  // Focus trap for mobile menu
+  useEffect(() => {
+    if (!isMenuOpen) {
+      if (menuButtonRef.current) menuButtonRef.current.focus();
+      return;
+    }
+    const focusableEls = menuRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusableEls.length) focusableEls[0].focus();
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+      if (e.key === "Tab") {
+        const firstEl = focusableEls[0];
+        const lastEl = focusableEls[focusableEls.length - 1];
+        if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        } else if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isMenuOpen]);
 
   const navLinks = [
     { path: "/", label: "Home" },
@@ -44,7 +76,13 @@ const Navbar = () => {
           </span>
         </Link>
 
-        <div className={`${styles.menu} ${isMenuOpen ? styles.open : ""}`}>
+        <div
+          className={`${styles.menu} ${isMenuOpen ? styles.open : ""}`}
+          ref={menuRef}
+          tabIndex={isMenuOpen ? 0 : -1}
+          aria-modal={isMenuOpen ? "true" : undefined}
+          role="dialog"
+        >
           {navLinks.map((link, index) => (
             <div
               key={link.path}
@@ -80,6 +118,9 @@ const Navbar = () => {
           className={`${styles.menuButton} ${isMenuOpen ? styles.open : ""}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
+          ref={menuButtonRef}
+          aria-expanded={isMenuOpen}
+          aria-controls="main-menu"
         >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>

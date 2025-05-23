@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import GitHubContributions from "../components/GitHubContributions";
 import styles from "./Projects.module.css";
+import { Helmet } from "react-helmet-async";
 
 const Projects = () => {
   const [year, setYear] = useState(new Date().getFullYear());
@@ -179,157 +180,200 @@ const Projects = () => {
   };
 
   return (
-    <div className={styles.projects}>
-      <div className={styles.container}>
-        <div className={`${styles.hero} ${styles.fadeIn}`}>
-          <h1 className={styles.title}>My Projects</h1>
-          <p className={styles.intro}>
-            Explore my GitHub repositories and coding journey. These projects
-            showcase my technical skills and problem-solving approach across
-            various technologies.
-          </p>
-        </div>
+    <>
+      <Helmet>
+        <title>Projects | Rouni Gorgees</title>
+        <meta
+          name="description"
+          content="Explore the projects and GitHub repositories of Rouni Gorgees, showcasing technical skills and coding journey."
+        />
+        <meta property="og:title" content="Projects | Rouni Gorgees" />
+        <meta
+          property="og:description"
+          content="Explore the projects and GitHub repositories of Rouni Gorgees, showcasing technical skills and coding journey."
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content="https://ronniegrg.github.io/projects"
+        />
+        <meta
+          property="og:image"
+          content="https://ronniegrg.github.io/rg-logo.svg"
+        />
+        <script type="application/ld+json">{`
+          {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Rouni Gorgees",
+            "jobTitle": "Software Developer",
+            "url": "https://ronniegrg.github.io/projects",
+            "sameAs": [
+              "https://github.com/Ronniegrg",
+              "https://www.linkedin.com/in/rouni-gorgees-207b56167/"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Ontario",
+              "addressCountry": "Canada"
+            }
+          }
+        `}</script>
+      </Helmet>
+      <div className={styles.projects}>
+        <div className={styles.container}>
+          <div className={`${styles.hero} ${styles.fadeIn}`}>
+            <h1 className={styles.title}>My Projects</h1>
+            <p className={styles.intro}>
+              Explore my GitHub repositories and coding journey. These projects
+              showcase my technical skills and problem-solving approach across
+              various technologies.
+            </p>
+          </div>
 
-        <div
-          className={`${styles.githubSection} ${inView ? styles.fadeInUp : ""}`}
-          ref={sectionRef}
-        >
-          <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
-            GitHub Activity
-          </h2>
-          <GitHubContributions username={GITHUB_USERNAME} />
-        </div>
-
-        <div className={styles.projectsSection}>
           <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-              marginBottom: 16,
-            }}
+            className={`${styles.githubSection} ${
+              inView ? styles.fadeInUp : ""
+            }`}
+            ref={sectionRef}
           >
-            <h2
-              className={styles.sectionTitle}
+            <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+              GitHub Activity
+            </h2>
+            <GitHubContributions username={GITHUB_USERNAME} />
+          </div>
+
+          <div className={styles.projectsSection}>
+            <div
               style={{
-                marginBottom: 0,
                 display: "flex",
                 alignItems: "center",
                 gap: "1rem",
+                marginBottom: 16,
               }}
             >
-              Projects in
-              <select
-                value={year}
-                onChange={(e) => setYear(Number(e.target.value))}
+              <h2
+                className={styles.sectionTitle}
                 style={{
-                  fontSize: "1.2rem",
-                  fontWeight: 700,
-                  borderRadius: 6,
-                  padding: "2px 8px",
-                  marginLeft: 8,
+                  marginBottom: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "1rem",
                 }}
               >
-                {allYears.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-              <span className={styles.projectCount} style={{ marginLeft: 8 }}>
-                ({projects.length} repositories)
-              </span>
-            </h2>
-          </div>
+                Projects in
+                <select
+                  value={year}
+                  onChange={(e) => setYear(Number(e.target.value))}
+                  style={{
+                    fontSize: "1.2rem",
+                    fontWeight: 700,
+                    borderRadius: 6,
+                    padding: "2px 8px",
+                    marginLeft: 8,
+                  }}
+                >
+                  {allYears.map((y) => (
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
+                  ))}
+                </select>
+                <span className={styles.projectCount} style={{ marginLeft: 8 }}>
+                  ({projects.length} repositories)
+                </span>
+              </h2>
+            </div>
 
-          {isLoading ? (
-            <div className={styles.loadingProjects}>
-              <div className={styles.loadingSpinner}></div>
-              <p>Loading projects...</p>
-            </div>
-          ) : error ? (
-            <div className={styles.projectsError}>
-              <p>{error}</p>
-            </div>
-          ) : projects.length === 0 ? (
-            <div className={styles.noProjects}>
-              <p>No repositories found for {year}.</p>
-            </div>
-          ) : (
-            <div className={styles.grid}>
-              {projects.map((project) => (
-                <div key={project.id} className={styles.projectCard}>
-                  <div className={styles.content}>
-                    <div className={styles.cardHeader}>
-                      <h3 className={styles.projectTitle}>
-                        {project.title}
-                        {project.isForked && (
-                          <span className={styles.forkedLabel}>
-                            <FaCodeBranch /> Forked
+            {isLoading ? (
+              <div className={styles.loadingProjects}>
+                <div className={styles.loadingSpinner}></div>
+                <p>Loading projects...</p>
+              </div>
+            ) : error ? (
+              <div className={styles.projectsError}>
+                <p>{error}</p>
+              </div>
+            ) : projects.length === 0 ? (
+              <div className={styles.noProjects}>
+                <p>No repositories found for {year}.</p>
+              </div>
+            ) : (
+              <div className={styles.grid}>
+                {projects.map((project) => (
+                  <div key={project.id} className={styles.projectCard}>
+                    <div className={styles.content}>
+                      <div className={styles.cardHeader}>
+                        <h3 className={styles.projectTitle}>
+                          {project.title}
+                          {project.isForked && (
+                            <span className={styles.forkedLabel}>
+                              <FaCodeBranch /> Forked
+                            </span>
+                          )}
+                        </h3>
+                        <div className={styles.projectMeta}>
+                          <span className={styles.metaItem}>
+                            <FaStar /> {project.stars}
                           </span>
-                        )}
-                      </h3>
-                      <div className={styles.projectMeta}>
-                        <span className={styles.metaItem}>
-                          <FaStar /> {project.stars}
+                          <span className={styles.metaItem}>
+                            <FaCodeBranch /> {project.forks}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className={styles.projectDescription}>
+                        {project.description}
+                      </p>
+
+                      <div className={styles.projectDates}>
+                        <span className={styles.dateItem}>
+                          <FaCalendarAlt className={styles.dateIcon} /> Created:{" "}
+                          {formatDate(project.created)}
                         </span>
-                        <span className={styles.metaItem}>
-                          <FaCodeBranch /> {project.forks}
+                        <span className={styles.dateItem}>
+                          <FaCode className={styles.dateIcon} /> Updated:{" "}
+                          {formatDate(project.updated)}
                         </span>
                       </div>
-                    </div>
 
-                    <p className={styles.projectDescription}>
-                      {project.description}
-                    </p>
+                      <div className={styles.technologies}>
+                        {project.tags.map((tag, index) => (
+                          <span key={index} className={styles.techTag}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
 
-                    <div className={styles.projectDates}>
-                      <span className={styles.dateItem}>
-                        <FaCalendarAlt className={styles.dateIcon} /> Created:{" "}
-                        {formatDate(project.created)}
-                      </span>
-                      <span className={styles.dateItem}>
-                        <FaCode className={styles.dateIcon} /> Updated:{" "}
-                        {formatDate(project.updated)}
-                      </span>
-                    </div>
-
-                    <div className={styles.technologies}>
-                      {project.tags.map((tag, index) => (
-                        <span key={index} className={styles.techTag}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className={styles.links}>
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={styles.link}
-                      >
-                        <FaGithub /> GitHub
-                      </a>
-                      {project.demo !== "#" && (
+                      <div className={styles.links}>
                         <a
-                          href={project.demo}
+                          href={project.github}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`${styles.link} ${styles.demoLink}`}
+                          className={styles.link}
                         >
-                          <FaExternalLinkAlt /> Live Demo
+                          <FaGithub /> GitHub
                         </a>
-                      )}
+                        {project.demo !== "#" && (
+                          <a
+                            href={project.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`${styles.link} ${styles.demoLink}`}
+                          >
+                            <FaExternalLinkAlt /> Live Demo
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
