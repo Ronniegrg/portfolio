@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import App from "./App";
 import "./styles/global.css";
+import "./styles/pdf.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

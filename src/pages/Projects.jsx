@@ -21,6 +21,8 @@ const Projects = () => {
 
   // Your GitHub username
   const GITHUB_USERNAME = "Ronniegrg";
+  // Get GitHub token from environment variable (set VITE_GITHUB_TOKEN in your .env file)
+  const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,7 +50,10 @@ const Projects = () => {
     const fetchYears = async () => {
       try {
         const response = await fetch(
-          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`
+          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`,
+          GITHUB_TOKEN
+            ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
+            : undefined
         );
         if (!response.ok) return;
         const repos = await response.json();
@@ -61,13 +66,13 @@ const Projects = () => {
         setAllYears(yearsArr);
         // If current year not in repos, default to most recent year
         if (!yearsArr.includes(year)) setYear(yearsArr[0]);
-      } catch (e) {
+      } catch {
         // fallback: just show current year
         setAllYears([year]);
       }
     };
     fetchYears();
-  }, [GITHUB_USERNAME]);
+  }, [GITHUB_USERNAME, GITHUB_TOKEN]);
 
   // Fetch GitHub repositories based on year
   useEffect(() => {
@@ -78,7 +83,10 @@ const Projects = () => {
       try {
         // Fetch all repositories for the user
         const response = await fetch(
-          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`
+          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`,
+          GITHUB_TOKEN
+            ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
+            : undefined
         );
 
         if (!response.ok) {
@@ -103,17 +111,22 @@ const Projects = () => {
             // Try to fetch languages for the repo
             let languages = [];
             try {
-              const langResponse = await fetch(repo.languages_url);
+              const langResponse = await fetch(
+                repo.languages_url,
+                GITHUB_TOKEN
+                  ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
+                  : undefined
+              );
               if (langResponse.ok) {
                 const langData = await langResponse.json();
                 languages = Object.keys(langData);
+              } else if (langResponse.status === 403) {
+                // Rate limit hit, skip languages for this repo
+                languages = repo.language ? [repo.language] : [];
               }
-            } catch (err) {
-              console.error(
-                "Error fetching languages for repo:",
-                repo.name,
-                err
-              );
+            } catch {
+              // fallback: skip languages
+              languages = repo.language ? [repo.language] : [];
             }
 
             // Create formatted project object
@@ -154,7 +167,7 @@ const Projects = () => {
     };
 
     fetchRepositories();
-  }, [year, GITHUB_USERNAME]);
+  }, [year, GITHUB_USERNAME, GITHUB_TOKEN]);
 
   // Format date for display
   const formatDate = (date) => {
@@ -181,7 +194,9 @@ const Projects = () => {
           className={`${styles.githubSection} ${inView ? styles.fadeInUp : ""}`}
           ref={sectionRef}
         >
-          <h2 className={styles.sectionTitle}>GitHub Activity</h2>
+          <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+            GitHub Activity
+          </h2>
           <GitHubContributions username={GITHUB_USERNAME} />
         </div>
 

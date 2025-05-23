@@ -18,68 +18,146 @@ import {
   FaClock,
 } from "react-icons/fa";
 import { useState } from "react";
-import mohawkLogo from "../assets/mohawk-college.png";
+import omnistudioDeveloper from "../assets/omnistudioDeveloper.png";
+import platformDeveloper from "../assets/platformDeveloper.png";
+import salesforceAdmin from "../assets/salesforcecertifiedadministrator.png";
+import mcmaster from "../assets/mcmaster.jpg";
+import mohawk from "../assets/mohawk-college.png";
+import Modal from "../components/Modal";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
+import "../styles/pdf.css"; // Additional custom PDF styles
+
+// Use the CDN worker file that matches our pdfjs-dist version (4.8.69)
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs`;
+
 const About = () => {
   const [activeSkillTab, setActiveSkillTab] = useState("frontend");
   const [expandedEducation, setExpandedEducation] = useState(null);
+  const [pdfModal, setPdfModal] = useState({ open: false, src: null });
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
 
   // Education data
   const education = [
     {
       id: 1,
-      degree: "Bachelor of Science in Computer Science",
-      institution: "Mohawk College",
-      location: "Hamilton, Ontario, Canada",
-      duration: "2013 - 2018",
-      description:
-        "Graduated with honors. Focused on software development, database management, and web technologies.",
-      achievements: ["Dean's List: 2020-2022", "Best Senior Project Award"],
-      courses: [
-        "Data Structures and Algorithms",
-        "Web Development",
-        "Database Systems",
-        "Software Engineering",
-        "Computer Networks",
-        "Operating Systems",
-        "Machine Learning Fundamentals",
-      ],
-      logo: mohawkLogo, // Add a placeholder or actual logo path
-    },
-    {
-      id: 2,
-      degree: "Full Stack Web Development Bootcamp",
-      institution: "Coding Academy",
-      location: "Online",
-      duration: "2022",
-      description:
-        "Intensive 12-week program covering modern web development technologies and best practices.",
-      achievements: ["Capstone Project: E-commerce Platform"],
-      courses: [
-        "JavaScript/ES6+",
-        "React.js",
-        "Node.js & Express",
-        "MongoDB",
-        "RESTful API Design",
-        "Authentication & Security",
-      ],
-      logo: "/academy-logo.png", // Add a placeholder or actual logo path
-    },
-    {
-      id: 3,
-      degree: "Cloud Computing Certification",
-      institution: "Tech Certification Program",
+      degree: "OmniStudio Developer",
+      institution: "Trailhead Academy",
       location: "Online",
       duration: "2023",
       description:
-        "Professional certification in cloud services and deployment.",
+        "The Salesforce OmniStudio Developer credential is intended for individuals who have knoledge, skills, and experience developing cloud applications using OmniStudio declarative development tools.",
+      achievements: ["Achieved 90% score"],
+      courses: [
+        "OmniStudio",
+        "Flexcards",
+        "Omniscripts",
+        "Integration Procedures",
+        "Omnistudio Data Mappers",
+        "Expression Sets and Decision Matrics",
+        "Industry Consoles",
+      ],
+      logo: omnistudioDeveloper, // Add a placeholder or actual logo path
+    },
+    {
+      id: 2,
+      degree: "Salesforce Certified Platform Developer I",
+      institution: "Trailhead Academy",
+      location: "Online",
+      duration: "2022",
+      description:
+        "The Salesforce Certified Platform Developer I is intended for individuals who have knowledge, skills, and experience in building custom applicaitons on the Lighting Platform. This credential encompasses the fundamental programmatic capabilities of the Lightning Platform to develop custom business logic and interfaces to extend Salesforce using Apex, Visualforce, and Lightning components.",
+      achievements: ["Achieved 90% score"],
+      courses: [
+        "Apex",
+        "Visualforce",
+        "Lightning Components",
+        "Lightning Web Components",
+        "Lightning Flow",
+        "Lightning Actions",
+        "Lightning Events",
+      ],
+      logo: platformDeveloper, // Add a placeholder or actual logo path
+    },
+    {
+      id: 3,
+      degree: "Salesforce Certified Administrator",
+      institution: "Trailhead Academy",
+      location: "Online",
+      duration: "2022",
+      description:
+        "Salesforce Certified Administrator is a certification for individuals who have knowledge, skills, and experience in administering Salesforce. ",
       achievements: ["Completed with 95% score"],
       courses: [
-        "Cloud Architecture",
-        "Containerization",
-        "Serverless Computing",
-        "Cloud Security",
+        "Salesforce Admin",
+        "customizing Salesforce",
+        "Configuring the platform",
+        "managing users",
+        "validation rules",
+        "workflows",
+        "reports and dashboards",
+        "data integration",
+        "security and permissions",
+        "salesforce mobile",
+        "salesforce analytics",
       ],
-      logo: "/cert-logo.png", // Add a placeholder or actual logo path
+      logo: salesforceAdmin, // Add a placeholder or actual logo path
+    },
+    {
+      id: 4,
+      degree: "Web Design",
+      institution: "McMaster University",
+      location: "Online",
+      duration: "2018-2020",
+      description:
+        "Web Design is a course that teaches students how to design and develop websites using HTML, CSS, and JavaScript. This course is designed to give students a strong foundation in web design and development.",
+      achievements: ["Completed with 90% score"],
+      courses: [
+        "Web Design principles and theory",
+        "Communication and writing principles for the web",
+        "HTML5, CSS, JavaScript, jQuery, and Bootstrap",
+        "Database/Data-driven websites such as PHP, SQL, and XML",
+        "Responsive web design",
+        "Project Planning and management",
+        "New and emerging trends in web design",
+      ],
+      logo: mcmaster,
+    },
+    {
+      id: 5,
+      degree:
+        "Computer Systems Technolog - Software Development, Computer Software Engineering",
+      institution: "Mohawk College",
+      location: "Hamilton, Ontario",
+      duration: "2013-2018",
+      description:
+        "foundational skills for software application development. This hands-on program covers key topics including a variety of programming languages, web application development, mobile application development, systems analysis, database design, quality assurance testing, technical writing, and communication skills.",
+      achievements: ["Completed with 84% score"],
+      courses: [
+        "Introduction to Programming",
+        "Object-Oriented Programming",
+        "Data Structures and Algorithms",
+        "Database Management Systems",
+        "Software Engineering",
+        "Communication Skills",
+        "Quality Assurance Testing",
+        "Database Design",
+        "Web Application Development",
+        "Mobile Application Development",
+        "Web languages including HTML, CSS, JavaScript (Ajax, JSON), PHP,jQuery, ASP.NET, Node.js, and React.js",
+        "Programming languages including Python, C, C++, Java, C# and Swift",
+        "Mobile application development for Android and iOS",
+        "Database architecture using MySQL, Oracle, and SQL Server",
+        "Tools and frameworks including IntelliJ, Visual Studio, Android Studio, MVC, and Laravel",
+        "Project Management including metics for optimizing IT projects",
+        "Internet of Things (IoT) using Raspberry Pi",
+        "Machine Learning",
+        "Technical writing and presentations",
+        "System/businees analysis",
+      ],
+      logo: mohawk,
     },
   ];
 
@@ -180,6 +258,15 @@ const About = () => {
         { name: "Responsive Design", level: 85 },
       ],
     },
+  };
+
+  // Map education id to PDF file names in public folder
+  const pdfFiles = {
+    1: "/Cert2863203_OmniStudioDeveloper_20230109.pdf",
+    2: "/Cert2595678_PlatformDeveloperI_20220926.pdf",
+    3: "/Cert2499846_Administrator_20220817.pdf",
+    4: "/Web-Design.pdf",
+    5: "/Computer-System-Technology-Software-Development.pdf",
   };
 
   return (
@@ -305,6 +392,30 @@ const About = () => {
                                 </span>
                               ))}
                             </div>
+                          </div>
+
+                          <div style={{ marginTop: "1rem" }}>
+                            <button
+                              className={styles.viewPdfButton}
+                              onClick={() =>
+                                setPdfModal({
+                                  open: true,
+                                  src: pdfFiles[edu.id],
+                                })
+                              }
+                              style={{
+                                background: "var(--primary-color)",
+                                color: "#fff",
+                                borderRadius: "6px",
+                                padding: "0.5rem 1.2rem",
+                                border: "none",
+                                fontWeight: 600,
+                                cursor: "pointer",
+                                fontSize: "1rem",
+                              }}
+                            >
+                              View Certificate
+                            </button>
                           </div>
                         </div>
                       )}
@@ -455,6 +566,62 @@ const About = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={pdfModal.open}
+        onClose={() => {
+          setPdfModal({ open: false, src: null });
+          setPageNumber(1);
+        }}
+      >
+        {pdfModal.src && (
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <Document
+              file={pdfModal.src}
+              onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+              loading={<div>Loading PDF...</div>}
+              className="no-print"
+            >
+              <Page pageNumber={pageNumber} width={600} />
+            </Document>
+            {numPages && numPages > 1 && (
+              <div
+                style={{
+                  marginTop: "1rem",
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "1rem",
+                }}
+              >
+                <button
+                  onClick={() => setPageNumber((page) => Math.max(page - 1, 1))}
+                  disabled={pageNumber <= 1}
+                >
+                  Previous
+                </button>
+                <span>
+                  Page {pageNumber} of {numPages}
+                </span>
+                <button
+                  onClick={() =>
+                    setPageNumber((page) => Math.min(page + 1, numPages))
+                  }
+                  disabled={pageNumber >= numPages}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+        <style>{`
+          @media print {
+            .no-print, .no-print * {
+              display: none !important;
+            }
+          }
+        `}</style>
+      </Modal>
     </div>
   );
 };
