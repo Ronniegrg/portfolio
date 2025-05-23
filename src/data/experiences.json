@@ -1,34 +1,101 @@
 [
   {
     "id": 1,
-    "title": "Senior Frontend Developer",
-    "company": "Tech Solutions Inc.",
-    "logo": "/company-logo1.png",
-    "location": "Stockholm, Sweden",
-    "duration": "2021 - Present",
-    "type": "Full-time",
+    "title": "Full Stack Web Developer",
+    "company": "Pure Air comfort. Contract",
+    "location": "San Diego, California, USA . Remote",
+    "duration": "One Week",
+    "type": "Part-time",
     "responsibilities": [
-      "Led the development of a high-traffic e-commerce platform using React and Redux",
-      "Implemented responsive design principles resulting in 40% improved mobile user engagement",
-      "Mentored junior developers and conducted code reviews to maintain high code quality",
-      "Optimized application performance achieving 30% faster load times"
+      "Designed and Develped the website fro mthe ground up usning React, HTML, CSS, and JavaScript",
+      "Implemented responsive design principles to ensure the website is mobile-friendly and accessible on various devices",
+      "Integrated third-party APIs for enhanced functionality, such as Google Maps and social media sharing",
+      "Collaborated with the client to gather requirements and provide regular updates on project progress",
+      "Conducted thorough testing and debugging to ensure the website is free of errors and performs optimally",
+      "Provided ongoing support and maintenance for the website after launch, including troubleshooting issues and implementing updates as needed"
     ],
-    "technologies": ["React", "Redux", "TypeScript", "SCSS", "Jest", "Webpack"]
+    "technologies": ["React", "JavaScript", "HTML", "CSS", "Git"]
   },
   {
     "id": 2,
-    "title": "Full Stack Developer",
-    "company": "Digital Innovations AB",
-    "logo": "/company-logo2.png",
-    "location": "Stockholm, Sweden",
-    "duration": "2019 - 2021",
+    "title": "Salesforce Developer",
+    "company": "ShoreWise Consulting. Internship",
+    "location": "Mississauga, Ontrario, Canada . Remote",
+    "duration": "Jul 2022 - May 2023",
     "type": "Full-time",
     "responsibilities": [
-      "Developed and maintained multiple client projects using MERN stack",
-      "Created RESTful APIs and implemented authentication systems",
-      "Collaborated with UX designers to implement pixel-perfect designs",
-      "Reduced server response time by 50% through database optimization"
+      "Configuration for Standard/Custom Objects, Tabs, Custom Settings, Record Types, Validation Rules, Flow, Workflow rules, Approval Process, Process Builder, Profiling, Reports and Dashboards, SOQL, Data Loader, Workbench, JIRA etc.",
+      "Build Apex Classes, Triggers, and Aura Component Pages for project Modules.",
+      "Developed Lightning Web Components (LWC) for better performance and user experience",
+      "Worked with Salesforce APIs to integrate with external systems",
+      "Participated in Agile ceremonies and collaborated with cross-functional teams",
+      "Work on OmniScripts, DataRaptors, Vlocity Cards, Integration Procedures, and FlexCards",
+      "Worked on Salesforce CPQ and Billing for product configuration and pricing"
     ],
-    "technologies": ["Node.js", "Express", "MongoDB", "React", "AWS", "Docker"]
+    "technologies": [
+      "Salesforce",
+      "Apex",
+      "LWC",
+      "SOQL",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Git",
+      "JIRA",
+      "Agile",
+      "Salesforce CPQ",
+      "Vlocity",
+      "OmniStudio",
+      "DataRaptor",
+      "Integration Procedures",
+      "FlexCards"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Full Stack Web Developer",
+    "company": "Gorgis Air Conditioning & Heating Inc. Contract",
+
+    "location": "San Diego, California, USA . Remote",
+    "duration": "Jun 2021 - Sep 2021",
+    "type": "Part-time",
+    "responsibilities": [
+      "Designed and Develped the website fro mthe ground up usning Php, HTML, CSS, and JavaScript",
+      "Implemented responsive design principles to ensure the website is mobile-friendly and accessible on various devices",
+      "Integrated third-party APIs for enhanced functionality, such as Google Maps and social media sharing",
+      "Collaborated with the client to gather requirements and provide regular updates on project progress",
+      "Conducted thorough testing and debugging to ensure the website is free of errors and performs optimally",
+      "Provided ongoing support and maintenance for the website after launch, including troubleshooting issues and implementing updates as needed",
+      "Worked with the client to develop a content management system (CMS) for easy updates and management of website content"
+    ],
+    "technologies": ["Php", "HTML", "CSS", "JavaScript", "MySQL", "Git"]
+  },
+  {
+    "id": 4,
+    "title": "Web Developer",
+    "company": "SAPSOL Technologies. Contract ",
+    "location": "Mississauga, Ontrario, Canada . Remote",
+    "duration": "Jun 2020 - Dec 2020",
+    "type": "Full-time",
+    "responsibilities": [
+      "Developed Web pages based on the design specifications provided by the client",
+      "Integrated new Features into the web appliction Such as Forms, and APIs",
+      "Maintained and updated existing web pages to ensure they are up-to-date and functioning properly",
+      "Created and designed the main portal from the ground up using HTML, CSS, and JavaScript",
+      "Collaborated with other virtual team members to ensure the project was completed on time and met the client's requirements",
+      "Conducted thorough testing and debugging to ensure the website is free of errors and performs optimally",
+      "Provided ongoing support and maintenance for the website after launch, including troubleshooting issues and implementing updates as needed",
+      "Worked with the client to develop a content management system (CMS) for easy updates and management of website content"
+    ],
+    "technologies": [
+      "Java (Serverless, J2EE)",
+      "HTML5",
+      "CSS",
+      "JavaScript",
+      "MySQL",
+      "Git",
+      "Bootstrap",
+      "jQuery"
+    ]
   }
 ]
