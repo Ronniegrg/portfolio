@@ -65,7 +65,7 @@ const SimpleAnalytics = () => {
           }
 
           localStorage.setItem("rg_interactions", JSON.stringify(clicks));
-        } catch (error) {
+        } catch {
           // Silent fail for non-critical feature
         }
       }

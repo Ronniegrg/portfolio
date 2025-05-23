@@ -37,7 +37,7 @@ const usePerformanceMonitoring = () => {
 
     try {
       fcpObserver.observe({ type: "paint", buffered: true });
-    } catch (e) {
+    } catch {
       console.warn("FCP monitoring not supported");
     }
 
@@ -49,7 +49,7 @@ const usePerformanceMonitoring = () => {
         setMetrics((prev) => ({ ...prev, lcp: lcpEntry.startTime }));
 
         // Log LCP for development
-        if (process.env.NODE_ENV === "development") {
+        if (import.meta.env.DEV) {
           console.log(
             `Largest Contentful Paint (LCP): ${lcpEntry.startTime.toFixed(0)}ms`
           );
@@ -59,7 +59,7 @@ const usePerformanceMonitoring = () => {
 
     try {
       lcpObserver.observe({ type: "largest-contentful-paint", buffered: true });
-    } catch (e) {
+    } catch {
       console.warn("LCP monitoring not supported");
     }
 
@@ -74,7 +74,7 @@ const usePerformanceMonitoring = () => {
         }));
 
         // Log FID for development
-        if (process.env.NODE_ENV === "development") {
+        if (import.meta.env.DEV) {
           const fid = fidEntry.processingStart - fidEntry.startTime;
           console.log(`First Input Delay (FID): ${fid.toFixed(0)}ms`);
         }
@@ -83,7 +83,7 @@ const usePerformanceMonitoring = () => {
 
     try {
       fidObserver.observe({ type: "first-input", buffered: true });
-    } catch (e) {
+    } catch {
       console.warn("FID monitoring not supported");
     }
 
@@ -100,7 +100,7 @@ const usePerformanceMonitoring = () => {
           setMetrics((prev) => ({ ...prev, cls: clsValue }));
 
           // Log CLS for development
-          if (process.env.NODE_ENV === "development") {
+          if (import.meta.env.DEV) {
             console.log(
               `Cumulative Layout Shift (CLS): ${clsValue.toFixed(3)}`
             );
@@ -111,7 +111,7 @@ const usePerformanceMonitoring = () => {
 
     try {
       clsObserver.observe({ type: "layout-shift", buffered: true });
-    } catch (e) {
+    } catch {
       console.warn("CLS monitoring not supported");
     }
 
@@ -122,7 +122,7 @@ const usePerformanceMonitoring = () => {
       setMetrics((prev) => ({ ...prev, ttfb: navEntry.responseStart }));
 
       // Log TTFB for development
-      if (process.env.NODE_ENV === "development") {
+      if (import.meta.env.DEV) {
         console.log(
           `Time to First Byte (TTFB): ${navEntry.responseStart.toFixed(0)}ms`
         );
