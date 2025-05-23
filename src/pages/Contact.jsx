@@ -13,7 +13,7 @@ import styles from "./Contact.module.css";
 import { Helmet } from "react-helmet-async";
 
 // Initialize EmailJS with your public key
-init("KZm9yLM22K3nOHQuN");
+init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
 const Contact = () => {
   const [formData, setFormData] = useState({

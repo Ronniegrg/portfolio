@@ -292,3 +292,44 @@ textarea:focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  background: var(--primary-color);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  z-index: 2000;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.3s;
+}
+
+.skip-link.visually-hidden:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.skip-link:focus {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  outline: 2px solid var(--primary-hover);
+  outline-offset: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip: auto;
+  white-space: normal;
+  overflow: visible;
+}
