@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "title": "Senior Frontend Developer",
+    "company": "Tech Solutions Inc.",
+    "logo": "/company-logo1.png",
+    "location": "Stockholm, Sweden",
+    "duration": "2021 - Present",
+    "type": "Full-time",
+    "responsibilities": [
+      "Led the development of a high-traffic e-commerce platform using React and Redux",
+      "Implemented responsive design principles resulting in 40% improved mobile user engagement",
+      "Mentored junior developers and conducted code reviews to maintain high code quality",
+      "Optimized application performance achieving 30% faster load times"
+    ],
+    "technologies": ["React", "Redux", "TypeScript", "SCSS", "Jest", "Webpack"]
+  },
+  {
+    "id": 2,
+    "title": "Full Stack Developer",
+    "company": "Digital Innovations AB",
+    "logo": "/company-logo2.png",
+    "location": "Stockholm, Sweden",
+    "duration": "2019 - 2021",
+    "type": "Full-time",
+    "responsibilities": [
+      "Developed and maintained multiple client projects using MERN stack",
+      "Created RESTful APIs and implemented authentication systems",
+      "Collaborated with UX designers to implement pixel-perfect designs",
+      "Reduced server response time by 50% through database optimization"
+    ],
+    "technologies": ["Node.js", "Express", "MongoDB", "React", "AWS", "Docker"]
+  }
+]

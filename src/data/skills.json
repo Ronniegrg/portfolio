@@ -1,0 +1,57 @@
+{
+  "frontend": {
+    "icon": "FaLaptopCode",
+    "title": "Frontend",
+    "skills": [
+      { "name": "React.js", "level": 90 },
+      { "name": "JavaScript (ES6+)", "level": 85 },
+      { "name": "HTML5", "level": 95 },
+      { "name": "CSS3/SCSS", "level": 90 },
+      { "name": "Tailwind CSS", "level": 85 },
+      { "name": "Redux", "level": 75 },
+      { "name": "TypeScript", "level": 70 }
+    ]
+  },
+  "backend": {
+    "icon": "FaServer",
+    "title": "Backend",
+    "skills": [
+      { "name": "Node.js", "level": 80 },
+      { "name": "Express", "level": 85 },
+      { "name": "C#/.NET", "level": 75 },
+      { "name": "REST API Design", "level": 80 },
+      { "name": "GraphQL", "level": 65 }
+    ]
+  },
+  "database": {
+    "icon": "FaDatabase",
+    "title": "Database",
+    "skills": [
+      { "name": "MongoDB", "level": 80 },
+      { "name": "SQL", "level": 75 },
+      { "name": "PostgreSQL", "level": 70 },
+      { "name": "Firebase", "level": 65 }
+    ]
+  },
+  "tools": {
+    "icon": "FaTools",
+    "title": "Tools & Others",
+    "skills": [
+      { "name": "Git/GitHub", "level": 90 },
+      { "name": "VS Code", "level": 95 },
+      { "name": "Figma", "level": 70 },
+      { "name": "Docker", "level": 60 },
+      { "name": "CI/CD", "level": 65 },
+      { "name": "Jest/Testing", "level": 70 }
+    ]
+  },
+  "mobile": {
+    "icon": "FaMobileAlt",
+    "title": "Mobile",
+    "skills": [
+      { "name": "React Native", "level": 65 },
+      { "name": "Flutter", "level": 50 },
+      { "name": "Responsive Design", "level": 85 }
+    ]
+  }
+}

@@ -17,7 +17,7 @@ import {
   FaBuilding,
   FaClock,
 } from "react-icons/fa";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import omnistudioDeveloper from "../assets/omnistudioDeveloper.png";
 import platformDeveloper from "../assets/platformDeveloper.png";
 import salesforceAdmin from "../assets/salesforcecertifiedadministrator.png";
@@ -32,232 +32,64 @@ import "../styles/pdf.css"; // Additional custom PDF styles
 // Use the CDN worker file that matches our pdfjs-dist version (4.8.69)
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs`;
 
+const logoMap = {
+  omnistudioDeveloper,
+  platformDeveloper,
+  salesforceAdmin,
+  mcmaster,
+  mohawk,
+};
+
+const iconMap = {
+  FaLaptopCode,
+  FaServer,
+  FaDatabase,
+  FaTools,
+  FaMobileAlt,
+};
+
 const About = () => {
   const [activeSkillTab, setActiveSkillTab] = useState("frontend");
   const [expandedEducation, setExpandedEducation] = useState(null);
   const [pdfModal, setPdfModal] = useState({ open: false, src: null });
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const [education, setEducation] = useState([]);
+  const [experiences, setExperiences] = useState([]);
+  const [skillCategories, setSkillCategories] = useState({});
 
-  // Education data
-  const education = [
-    {
-      id: 1,
-      degree: "OmniStudio Developer",
-      institution: "Trailhead Academy",
-      location: "Online",
-      duration: "2023",
-      description:
-        "The Salesforce OmniStudio Developer credential is intended for individuals who have knoledge, skills, and experience developing cloud applications using OmniStudio declarative development tools.",
-      achievements: ["Achieved 90% score"],
-      courses: [
-        "OmniStudio",
-        "Flexcards",
-        "Omniscripts",
-        "Integration Procedures",
-        "Omnistudio Data Mappers",
-        "Expression Sets and Decision Matrics",
-        "Industry Consoles",
-      ],
-      logo: omnistudioDeveloper, // Add a placeholder or actual logo path
-    },
-    {
-      id: 2,
-      degree: "Salesforce Certified Platform Developer I",
-      institution: "Trailhead Academy",
-      location: "Online",
-      duration: "2022",
-      description:
-        "The Salesforce Certified Platform Developer I is intended for individuals who have knowledge, skills, and experience in building custom applicaitons on the Lighting Platform. This credential encompasses the fundamental programmatic capabilities of the Lightning Platform to develop custom business logic and interfaces to extend Salesforce using Apex, Visualforce, and Lightning components.",
-      achievements: ["Achieved 90% score"],
-      courses: [
-        "Apex",
-        "Visualforce",
-        "Lightning Components",
-        "Lightning Web Components",
-        "Lightning Flow",
-        "Lightning Actions",
-        "Lightning Events",
-      ],
-      logo: platformDeveloper, // Add a placeholder or actual logo path
-    },
-    {
-      id: 3,
-      degree: "Salesforce Certified Administrator",
-      institution: "Trailhead Academy",
-      location: "Online",
-      duration: "2022",
-      description:
-        "Salesforce Certified Administrator is a certification for individuals who have knowledge, skills, and experience in administering Salesforce. ",
-      achievements: ["Completed with 95% score"],
-      courses: [
-        "Salesforce Admin",
-        "customizing Salesforce",
-        "Configuring the platform",
-        "managing users",
-        "validation rules",
-        "workflows",
-        "reports and dashboards",
-        "data integration",
-        "security and permissions",
-        "salesforce mobile",
-        "salesforce analytics",
-      ],
-      logo: salesforceAdmin, // Add a placeholder or actual logo path
-    },
-    {
-      id: 4,
-      degree: "Web Design",
-      institution: "McMaster University",
-      location: "Online",
-      duration: "2018-2020",
-      description:
-        "Web Design is a course that teaches students how to design and develop websites using HTML, CSS, and JavaScript. This course is designed to give students a strong foundation in web design and development.",
-      achievements: ["Completed with 90% score"],
-      courses: [
-        "Web Design principles and theory",
-        "Communication and writing principles for the web",
-        "HTML5, CSS, JavaScript, jQuery, and Bootstrap",
-        "Database/Data-driven websites such as PHP, SQL, and XML",
-        "Responsive web design",
-        "Project Planning and management",
-        "New and emerging trends in web design",
-      ],
-      logo: mcmaster,
-    },
-    {
-      id: 5,
-      degree:
-        "Computer Systems Technolog - Software Development, Computer Software Engineering",
-      institution: "Mohawk College",
-      location: "Hamilton, Ontario",
-      duration: "2013-2018",
-      description:
-        "foundational skills for software application development. This hands-on program covers key topics including a variety of programming languages, web application development, mobile application development, systems analysis, database design, quality assurance testing, technical writing, and communication skills.",
-      achievements: ["Completed with 84% score"],
-      courses: [
-        "Introduction to Programming",
-        "Object-Oriented Programming",
-        "Data Structures and Algorithms",
-        "Database Management Systems",
-        "Software Engineering",
-        "Communication Skills",
-        "Quality Assurance Testing",
-        "Database Design",
-        "Web Application Development",
-        "Mobile Application Development",
-        "Web languages including HTML, CSS, JavaScript (Ajax, JSON), PHP,jQuery, ASP.NET, Node.js, and React.js",
-        "Programming languages including Python, C, C++, Java, C# and Swift",
-        "Mobile application development for Android and iOS",
-        "Database architecture using MySQL, Oracle, and SQL Server",
-        "Tools and frameworks including IntelliJ, Visual Studio, Android Studio, MVC, and Laravel",
-        "Project Management including metics for optimizing IT projects",
-        "Internet of Things (IoT) using Raspberry Pi",
-        "Machine Learning",
-        "Technical writing and presentations",
-        "System/businees analysis",
-      ],
-      logo: mohawk,
-    },
-  ];
-
-  const experiences = [
-    {
-      id: 1,
-      title: "Senior Frontend Developer",
-      company: "Tech Solutions Inc.",
-      logo: "/company-logo1.png",
-      location: "Stockholm, Sweden",
-      duration: "2021 - Present",
-      type: "Full-time",
-      responsibilities: [
-        "Led the development of a high-traffic e-commerce platform using React and Redux",
-        "Implemented responsive design principles resulting in 40% improved mobile user engagement",
-        "Mentored junior developers and conducted code reviews to maintain high code quality",
-        "Optimized application performance achieving 30% faster load times",
-      ],
-      technologies: ["React", "Redux", "TypeScript", "SCSS", "Jest", "Webpack"],
-    },
-    {
-      id: 2,
-      title: "Full Stack Developer",
-      company: "Digital Innovations AB",
-      logo: "/company-logo2.png",
-      location: "Stockholm, Sweden",
-      duration: "2019 - 2021",
-      type: "Full-time",
-      responsibilities: [
-        "Developed and maintained multiple client projects using MERN stack",
-        "Created RESTful APIs and implemented authentication systems",
-        "Collaborated with UX designers to implement pixel-perfect designs",
-        "Reduced server response time by 50% through database optimization",
-      ],
-      technologies: ["Node.js", "Express", "MongoDB", "React", "AWS", "Docker"],
-    },
-  ];
+  useEffect(() => {
+    fetch("/src/data/education.json")
+      .then((res) => res.json())
+      .then((data) => {
+        // Map logo string to imported image
+        const mapped = data.map((item) => ({
+          ...item,
+          logo: logoMap[item.logo] || item.logo,
+        }));
+        setEducation(mapped);
+      });
+    fetch("/src/data/experiences.json")
+      .then((res) => res.json())
+      .then((data) => setExperiences(data));
+    fetch("/src/data/skills.json")
+      .then((res) => res.json())
+      .then((data) => {
+        // Map icon string to imported icon component
+        const mapped = {};
+        for (const key in data) {
+          mapped[key] = {
+            ...data[key],
+            icon: iconMap[data[key].icon] || null,
+          };
+        }
+        setSkillCategories(mapped);
+      });
+  }, []);
 
   // Toggle education item expansion
   const toggleEducation = (id) => {
     setExpandedEducation(expandedEducation === id ? null : id);
-  };
-
-  // Define skill categories with proficiency levels
-  const skillCategories = {
-    frontend: {
-      icon: <FaLaptopCode />,
-      title: "Frontend",
-      skills: [
-        { name: "React.js", level: 90 },
-        { name: "JavaScript (ES6+)", level: 85 },
-        { name: "HTML5", level: 95 },
-        { name: "CSS3/SCSS", level: 90 },
-        { name: "Tailwind CSS", level: 85 },
-        { name: "Redux", level: 75 },
-        { name: "TypeScript", level: 70 },
-      ],
-    },
-    backend: {
-      icon: <FaServer />,
-      title: "Backend",
-      skills: [
-        { name: "Node.js", level: 80 },
-        { name: "Express", level: 85 },
-        { name: "C#/.NET", level: 75 },
-        { name: "REST API Design", level: 80 },
-        { name: "GraphQL", level: 65 },
-      ],
-    },
-    database: {
-      icon: <FaDatabase />,
-      title: "Database",
-      skills: [
-        { name: "MongoDB", level: 80 },
-        { name: "SQL", level: 75 },
-        { name: "PostgreSQL", level: 70 },
-        { name: "Firebase", level: 65 },
-      ],
-    },
-    tools: {
-      icon: <FaTools />,
-      title: "Tools & Others",
-      skills: [
-        { name: "Git/GitHub", level: 90 },
-        { name: "VS Code", level: 95 },
-        { name: "Figma", level: 70 },
-        { name: "Docker", level: 60 },
-        { name: "CI/CD", level: 65 },
-        { name: "Jest/Testing", level: 70 },
-      ],
-    },
-    mobile: {
-      icon: <FaMobileAlt />,
-      title: "Mobile",
-      skills: [
-        { name: "React Native", level: 65 },
-        { name: "Flutter", level: 50 },
-        { name: "Responsive Design", level: 85 },
-      ],
-    },
   };
 
   // Map education id to PDF file names in public folder
@@ -442,65 +274,72 @@ const About = () => {
                     }`}
                     onClick={() => setActiveSkillTab(key)}
                   >
-                    <span className={styles.tabIcon}>{category.icon}</span>
+                    <span className={styles.tabIcon}>
+                      {category.icon && <category.icon />}
+                    </span>
                     <span className={styles.tabLabel}>{category.title}</span>
                   </button>
                 ))}
               </div>
 
               <div className={styles.skillContent}>
-                <h3 className={styles.skillCategoryTitle}>
-                  {skillCategories[activeSkillTab].icon}
-                  {skillCategories[activeSkillTab].title} Skills
-                </h3>
-
-                <div className={styles.skillsList}>
-                  {skillCategories[activeSkillTab].skills.map(
-                    (skill, index) => (
-                      <div key={index} className={styles.skillItem}>
-                        <div className={styles.skillInfo}>
-                          <span className={styles.skillName}>{skill.name}</span>
-                          <span className={styles.skillLevel}>
-                            {skill.level >= 90
-                              ? "Expert"
-                              : skill.level >= 70
-                              ? "Advanced"
-                              : skill.level >= 50
-                              ? "Intermediate"
-                              : "Beginner"}
-                          </span>
-                        </div>
-                        <div className={styles.skillBar}>
-                          <div
-                            className={styles.skillProgress}
-                            style={{
-                              width: `${skill.level}%`,
-                              animationDelay: `${index * 0.1}s`,
-                            }}
-                          ></div>
-                        </div>
-                        <div className={styles.skillStars}>
-                          {[...Array(5)].map((_, i) => (
-                            <FaStar
-                              key={i}
-                              className={`
-                                                            ${styles.star}
-                                                            ${
-                                                              i <
-                                                              Math.round(
-                                                                skill.level / 20
-                                                              )
-                                                                ? styles.filledStar
-                                                                : ""
-                                                            }
-                                                        `}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
+                {skillCategories[activeSkillTab] && (
+                  <>
+                    <h3 className={styles.skillCategoryTitle}>
+                      {skillCategories[activeSkillTab].icon &&
+                        React.createElement(
+                          skillCategories[activeSkillTab].icon
+                        )}
+                      {skillCategories[activeSkillTab].title} Skills
+                    </h3>
+                    <div className={styles.skillsList}>
+                      {skillCategories[activeSkillTab].skills.map(
+                        (skill, index) => (
+                          <div key={index} className={styles.skillItem}>
+                            <div className={styles.skillInfo}>
+                              <span className={styles.skillName}>
+                                {skill.name}
+                              </span>
+                              <span className={styles.skillLevel}>
+                                {skill.level >= 90
+                                  ? "Expert"
+                                  : skill.level >= 70
+                                  ? "Advanced"
+                                  : skill.level >= 50
+                                  ? "Intermediate"
+                                  : "Beginner"}
+                              </span>
+                            </div>
+                            <div className={styles.skillBar}>
+                              <div
+                                className={styles.skillProgress}
+                                style={{
+                                  width: `${skill.level}%`,
+                                  animationDelay: `${index * 0.1}s`,
+                                }}
+                              ></div>
+                            </div>
+                            <div className={styles.skillStars}>
+                              {[...Array(5)].map((_, i) => (
+                                <FaStar
+                                  key={i}
+                                  className={`
+                                  ${styles.star}
+                                  ${
+                                    i < Math.round(skill.level / 20)
+                                      ? styles.filledStar
+                                      : ""
+                                  }
+                                `}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
