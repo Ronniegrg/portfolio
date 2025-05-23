@@ -26,17 +26,20 @@ A modern, responsive portfolio website built with React, showcasing my skills, p
 ## 📦 Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/Ronniegrg/portfolio.git
    ```
 
 2. Install dependencies:
+
    ```bash
    cd portfolio
    npm install
    ```
 
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -103,6 +106,7 @@ portfolio/
 The portfolio can be deployed to any static hosting service:
 
 1. Vercel:
+
    ```bash
    npm install -g vercel
    vercel
