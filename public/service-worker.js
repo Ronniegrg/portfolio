@@ -1,15 +1,17 @@
 // Service Worker for Rouni Gorgees Portfolio
 const CACHE_NAME = "rg-portfolio-v1";
+// Base path from vite.config.js
+const BASE_PATH = "/portfolio/";
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/manifest.webmanifest",
-  "/rg-logo-192.png",
-  "/rg-logo-512.png",
-  "/rg-logo.svg",
-  "/src/main.jsx",
-  "/src/styles/global.css",
-  "/src/styles/pdf.css",
+  BASE_PATH,
+  BASE_PATH + "index.html",
+  BASE_PATH + "manifest.webmanifest",
+  BASE_PATH + "rg-logo-192.png",
+  BASE_PATH + "rg-logo-512.png",
+  BASE_PATH + "rg-logo.svg",
+  BASE_PATH + "src/main.jsx",
+  BASE_PATH + "src/styles/global.css",
+  BASE_PATH + "src/styles/pdf.css",
 ];
 
 // Install service worker
