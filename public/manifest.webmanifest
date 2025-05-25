@@ -2,7 +2,7 @@
   "name": "Rouni Gorgees Portfolio",
   "short_name": "RG Portfolio",
   "description": "Portfolio of Rouni Gorgees, Software Developer.",
-  "start_url": "/portfolio/",
+  "start_url": "/portfolio/?v=1",
   "scope": "/portfolio/",
   "display": "standalone",
   "orientation": "any",

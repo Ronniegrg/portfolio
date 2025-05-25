@@ -8,6 +8,8 @@ import "./styles/pdf.css";
 import { HelmetProvider } from "react-helmet-async";
 import AccessibilityManager from "./components/AccessibilityManager";
 
+console.log("Main.jsx loaded - starting React app");
+
 // Register service worker for PWA capabilities
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -28,7 +30,11 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const rootElement = document.getElementById("root");
+console.log("Root element found:", rootElement);
+
+const root = ReactDOM.createRoot(rootElement);
+console.log("React root created");
 
 root.render(
   <React.StrictMode>
@@ -42,3 +48,5 @@ root.render(
     </HashRouter>
   </React.StrictMode>
 );
+
+console.log("React app rendered");

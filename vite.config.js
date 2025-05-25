@@ -16,5 +16,14 @@ export default defineConfig({
     hmr: {
       overlay: false,
     },
+    middlewareMode: false,
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url && req.url.endsWith(".webmanifest")) {
+          res.setHeader("Content-Type", "application/manifest+json");
+        }
+        next();
+      });
+    },
   },
 });
