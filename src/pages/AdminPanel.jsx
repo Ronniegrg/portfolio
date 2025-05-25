@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import SimpleAnalytics from "../components/SimpleAnalytics";
+import PerformanceChart from "../components/PerformanceChart";
+import CLSChart from "../components/CLSChart";
+import usePerformanceMonitoring from "../hooks/usePerformanceMonitoring";
 import styles from "./AdminPanel.module.css";
 
 const AdminPanel = () => {
@@ -7,6 +10,8 @@ const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("pageViews");
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [password, setPassword] = useState("");
+  // Get performance metrics using our custom hook
+  const performanceMetrics = usePerformanceMonitoring();
 
   // Get analytics data when component mounts
   useEffect(() => {
@@ -76,7 +81,6 @@ const AdminPanel = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.heading}>Analytics Dashboard</h1>
-
       <div className={styles.summary}>
         <div className={styles.summaryItem}>
           <h3>Page Views</h3>
@@ -90,8 +94,7 @@ const AdminPanel = () => {
           <h3>Unique Pages</h3>
           <p className={styles.summaryValue}>{summary.uniquePaths}</p>
         </div>
-      </div>
-
+      </div>{" "}
       <div className={styles.tabs}>
         <button
           className={`${styles.tab} ${
@@ -117,8 +120,15 @@ const AdminPanel = () => {
         >
           Page Counts
         </button>
-      </div>
-
+        <button
+          className={`${styles.tab} ${
+            activeTab === "performance" ? styles.activeTab : ""
+          }`}
+          onClick={() => setActiveTab("performance")}
+        >
+          Performance
+        </button>
+      </div>{" "}
       <div className={styles.dataContainer}>
         {activeTab === "pageViews" && (
           <>
@@ -199,8 +209,85 @@ const AdminPanel = () => {
             </table>
           </>
         )}
-      </div>
 
+        {activeTab === "performance" && (
+          <>
+            <h2>Performance Metrics</h2>
+            <div className={styles.chartsContainer}>
+              <div className={styles.mainChart}>
+                <PerformanceChart metrics={performanceMetrics} />
+              </div>
+              <div className={styles.clsChart}>
+                <CLSChart cls={performanceMetrics.cls} />
+              </div>
+              <div className={styles.metricsTable}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Metric</th>
+                      <th>Value</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>FCP</td>
+                      <td>
+                        {performanceMetrics.fcp
+                          ? `${performanceMetrics.fcp.toFixed(2)} ms`
+                          : "N/A"}
+                      </td>
+                      <td>
+                        First Contentful Paint - Time to first content render
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>LCP</td>
+                      <td>
+                        {performanceMetrics.lcp
+                          ? `${performanceMetrics.lcp.toFixed(2)} ms`
+                          : "N/A"}
+                      </td>
+                      <td>
+                        Largest Contentful Paint - Largest content render time
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>TTFB</td>
+                      <td>
+                        {performanceMetrics.ttfb
+                          ? `${performanceMetrics.ttfb.toFixed(2)} ms`
+                          : "N/A"}
+                      </td>
+                      <td>Time to First Byte - Initial server response time</td>
+                    </tr>
+                    <tr>
+                      <td>FID</td>
+                      <td>
+                        {performanceMetrics.fid
+                          ? `${performanceMetrics.fid.toFixed(2)} ms`
+                          : "N/A"}
+                      </td>
+                      <td>
+                        First Input Delay - Responsiveness to first interaction
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>CLS</td>
+                      <td>
+                        {performanceMetrics.cls
+                          ? performanceMetrics.cls.toFixed(3)
+                          : "N/A"}
+                      </td>
+                      <td>Cumulative Layout Shift - Visual stability score</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
       <div className={styles.actions}>
         <button
           className={styles.clearButton}

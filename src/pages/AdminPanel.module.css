@@ -178,3 +178,62 @@
 .button:hover {
   background-color: var(--color-primary-dark);
 }
+
+/* Performance charts styles */
+.chartsContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.mainChart {
+  background-color: var(--color-bg-input);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+:global(.dark) .mainChart {
+  background-color: var(--color-bg-input-dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.clsChart {
+  background-color: var(--color-bg-input);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+:global(.dark) .clsChart {
+  background-color: var(--color-bg-input-dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.metricsTable {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .chartsContainer {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .mainChart {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+  }
+
+  .clsChart {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+
+  .metricsTable {
+    grid-column: 1 / 3;
+    grid-row: 2 / 3;
+    margin-top: 0;
+  }
+}
