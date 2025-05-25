@@ -38,22 +38,31 @@ const PerformanceChart = ({ metrics }) => {
 
   // Prepare data for the chart
   const chartData = {
-    labels: ["FCP", "LCP", "TTFB", "FID"],
+    labels: ["FCP", "LCP", "TTFB", "FID", "CLS"],
     datasets: [
       {
         label: "Performance Metrics (ms)",
-        data: [metrics.fcp, metrics.lcp, metrics.ttfb, metrics.fid],
+        data: [
+          metrics.fcp,
+          metrics.lcp,
+          metrics.ttfb,
+          metrics.fid,
+          // CLS needs to be multiplied for better visualization
+          metrics.cls ? metrics.cls * 1000 : null,
+        ],
         backgroundColor: [
           "rgba(54, 162, 235, 0.7)", // FCP - Blue
           "rgba(255, 206, 86, 0.7)", // LCP - Yellow
           "rgba(75, 192, 192, 0.7)", // TTFB - Teal
           "rgba(153, 102, 255, 0.7)", // FID - Purple
+          "rgba(255, 99, 132, 0.7)", // CLS - Red
         ],
         borderColor: [
           "rgba(54, 162, 235, 1)",
           "rgba(255, 206, 86, 1)",
           "rgba(75, 192, 192, 1)",
           "rgba(153, 102, 255, 1)",
+          "rgba(255, 99, 132, 1)",
         ],
         borderWidth: 1,
       },
@@ -102,7 +111,13 @@ const PerformanceChart = ({ metrics }) => {
               label += ": ";
             }
             if (context.parsed.y !== null) {
-              label += context.parsed.y.toFixed(2) + " ms";
+              // Check if this is the CLS metric (which is the 5th item in our data array)
+              if (context.dataIndex === 4) {
+                // Convert back to original CLS value for display
+                label += (context.parsed.y / 1000).toFixed(4);
+              } else {
+                label += context.parsed.y.toFixed(2) + " ms";
+              }
             }
             return label;
           },
@@ -118,9 +133,14 @@ const PerformanceChart = ({ metrics }) => {
       },
     },
   };
-
   // Show placeholder if metrics are not available
-  if (!metrics.fcp && !metrics.lcp && !metrics.ttfb && !metrics.fid) {
+  if (
+    !metrics.fcp &&
+    !metrics.lcp &&
+    !metrics.ttfb &&
+    !metrics.fid &&
+    !metrics.cls
+  ) {
     return (
       <div
         className="chart-container"
