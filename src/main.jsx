@@ -8,8 +8,6 @@ import "./styles/pdf.css";
 import { HelmetProvider } from "react-helmet-async";
 import AccessibilityManager from "./components/AccessibilityManager";
 
-console.log("Main.jsx loaded - starting React app");
-
 // Register service worker for PWA capabilities
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
