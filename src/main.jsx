@@ -12,10 +12,11 @@ import AccessibilityManager from "./components/AccessibilityManager";
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     // Get the correct path based on the deployment environment
-    const swPath = window.location.hostname === 'localhost' 
-      ? '/service-worker.js'
-      : '/portfolio/service-worker.js';
-      
+    const swPath =
+      window.location.hostname === "localhost"
+        ? "/service-worker.js"
+        : "/portfolio/service-worker.js";
+
     navigator.serviceWorker
       .register(swPath)
       .then((registration) => {
