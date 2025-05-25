@@ -23,8 +23,14 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist
           branch: gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
