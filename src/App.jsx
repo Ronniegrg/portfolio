@@ -16,13 +16,21 @@ function App() {
   // Monitor performance metrics
   const metrics = usePerformanceMonitoring();
 
-  // Log metrics when they change (in development only)
+  // Log metrics when they change (in development only) - throttled to avoid spam
   useEffect(() => {
-    // Check if we're in development mode
-    if (import.meta.env.DEV) {
-      console.log("Performance metrics:", metrics);
+    // Check if we're in development mode and metrics have meaningful data
+    if (
+      import.meta.env.DEV &&
+      (metrics.fcp || metrics.lcp || metrics.fid || metrics.ttfb)
+    ) {
+      // Only log every few seconds to avoid spam
+      const timeoutId = setTimeout(() => {
+        console.log("Performance metrics:", metrics);
+      }, 1000);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [metrics]);
+  }, [metrics.fcp, metrics.lcp, metrics.fid, metrics.ttfb]); // Only log when key metrics change
 
   return (
     <Suspense

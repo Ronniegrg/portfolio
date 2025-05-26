@@ -158,9 +158,13 @@ const Contact = () => {
 
     try {
       // Check if EmailJS is configured
-      if (!import.meta.env.VITE_EMAILJS_PUBLIC_KEY) {
+      if (
+        !import.meta.env.VITE_EMAILJS_PUBLIC_KEY ||
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY ===
+          "your_emailjs_public_key_here"
+      ) {
         throw new Error(
-          "EmailJS configuration is missing. Please check your environment variables."
+          "EmailJS is not configured yet. Please set up your EmailJS credentials in the .env file to enable the contact form."
         );
       }
 
