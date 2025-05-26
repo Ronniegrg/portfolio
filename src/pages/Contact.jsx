@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { init, send } from "emailjs-com";
+import emailjs from "emailjs-com";
 import {
   FaGithub,
   FaLinkedin,
@@ -11,9 +11,6 @@ import {
 } from "react-icons/fa";
 import styles from "./Contact.module.css";
 import { Helmet } from "react-helmet-async";
-
-// Initialize EmailJS with your public key
-init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -160,6 +157,13 @@ const Contact = () => {
     setSubmitStatus(null);
 
     try {
+      // Check if EmailJS is configured
+      if (!import.meta.env.VITE_EMAILJS_PUBLIC_KEY) {
+        throw new Error(
+          "EmailJS configuration is missing. Please check your environment variables."
+        );
+      }
+
       // Send email using EmailJS
       const templateParams = {
         name: formData.name,
@@ -169,10 +173,11 @@ const Contact = () => {
       };
 
       // Using your service ID and template ID
-      await send(
+      await emailjs.send(
         "service_2uujxo8", // Service ID
         "template_j9bqd5m", // Template ID
-        templateParams
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY // Public Key
       );
 
       setSubmitStatus({

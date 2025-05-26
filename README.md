@@ -48,19 +48,26 @@ A modern, responsive portfolio website built with React, showcasing my skills, p
    npm install
    ```
 
-3. Create a `.env` file in the project root:
+3. Set up EmailJS for the contact form:
+
+   - Create an account at [EmailJS](https://www.emailjs.com/)
+   - Create a new email service
+   - Create an email template with the following variables: `{{name}}`, `{{email}}`, `{{subject}}`, `{{message}}`
+   - Get your public key from the dashboard
+
+4. Create a `.env` file in the project root (copy from `.env.example`):
 
    ```env
    VITE_EMAILJS_PUBLIC_KEY=your_emailjs_public_key
    ```
 
-4. Start the development server:
+5. Start the development server:
 
    ```bash
    npm run dev
    ```
 
-5. Build for production:
+6. Build for production:
    ```bash
    npm run build
    ```

@@ -90,6 +90,7 @@ const usePerformanceMonitoring = () => {
     // Track Cumulative Layout Shift (CLS)
     let clsValue = 0;
     let clsEntries = [];
+    let lastLoggedCls = 0;
 
     const clsObserver = new PerformanceObserver((entryList) => {
       for (const entry of entryList.getEntries()) {
@@ -99,11 +100,14 @@ const usePerformanceMonitoring = () => {
           clsEntries.push(entry);
           setMetrics((prev) => ({ ...prev, cls: clsValue }));
 
-          // Log CLS for development
-          if (import.meta.env.DEV) {
+          // Log CLS for development only when it increases significantly
+          if (import.meta.env.DEV && clsValue - lastLoggedCls > 0.1) {
             console.log(
-              `Cumulative Layout Shift (CLS): ${clsValue.toFixed(3)}`
+              `Cumulative Layout Shift (CLS): ${clsValue.toFixed(
+                3
+              )} (significant change detected)`
             );
+            lastLoggedCls = clsValue;
           }
         }
       }

@@ -8,32 +8,26 @@ import "./styles/pdf.css";
 import { HelmetProvider } from "react-helmet-async";
 import AccessibilityManager from "./components/AccessibilityManager";
 
-// Register service worker for PWA capabilities
-if ("serviceWorker" in navigator) {
+// Register service worker for PWA capabilities (only in production)
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
   window.addEventListener("load", () => {
-    // Get the correct path based on the deployment environment
-    const swPath =
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1"
-        ? "/service-worker.js"
-        : "/portfolio/service-worker.js";
+    const swPath = "/portfolio/service-worker.js";
 
     navigator.serviceWorker
       .register(swPath)
       .then((registration) => {
-        console.log("Service worker registered: ", registration);
+        if (import.meta.env.DEV) {
+          console.log("Service worker registered: ", registration);
+        }
       })
       .catch((error) => {
-        console.log("Service worker registration failed: ", error);
+        console.error("Service worker registration failed: ", error);
       });
   });
 }
 
 const rootElement = document.getElementById("root");
-console.log("Root element found:", rootElement);
-
 const root = ReactDOM.createRoot(rootElement);
-console.log("React root created");
 
 root.render(
   <React.StrictMode>
@@ -47,5 +41,3 @@ root.render(
     </HashRouter>
   </React.StrictMode>
 );
-
-console.log("React app rendered");
