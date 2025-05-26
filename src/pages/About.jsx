@@ -30,11 +30,6 @@ import "react-pdf/dist/esm/Page/TextLayer.css";
 import "../styles/pdf.css"; // Additional custom PDF styles
 import { Helmet } from "react-helmet-async";
 
-// Import JSON data as modules
-import educationData from "../data/education.json";
-import experiencesData from "../data/experiences.json";
-import skillsData from "../data/skills.json";
-
 // Use the CDN worker file that matches our pdfjs-dist version (4.8.69)
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs`;
 
@@ -65,24 +60,32 @@ const About = () => {
   const [skillCategories, setSkillCategories] = useState({});
 
   useEffect(() => {
-    // Use imported data instead of fetching
-    const mappedEducation = educationData.map((item) => ({
-      ...item,
-      logo: logoMap[item.logo] || item.logo,
-    }));
-    setEducation(mappedEducation);
-
-    setExperiences(experiencesData);
-
-    // Map icon string to imported icon component
-    const mappedSkills = {};
-    for (const key in skillsData) {
-      mappedSkills[key] = {
-        ...skillsData[key],
-        icon: iconMap[skillsData[key].icon] || null,
-      };
-    }
-    setSkillCategories(mappedSkills);
+    fetch(`${import.meta.env.BASE_URL}data/education.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        // Map logo string to imported image
+        const mapped = data.map((item) => ({
+          ...item,
+          logo: logoMap[item.logo] || item.logo,
+        }));
+        setEducation(mapped);
+      });
+    fetch(`${import.meta.env.BASE_URL}data/experiences.json`)
+      .then((res) => res.json())
+      .then((data) => setExperiences(data));
+    fetch(`${import.meta.env.BASE_URL}data/skills.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        // Map icon string to imported icon component
+        const mapped = {};
+        for (const key in data) {
+          mapped[key] = {
+            ...data[key],
+            icon: iconMap[data[key].icon] || null,
+          };
+        }
+        setSkillCategories(mapped);
+      });
   }, []);
 
   // Toggle education item expansion
