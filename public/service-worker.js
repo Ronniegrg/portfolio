@@ -9,9 +9,8 @@ const urlsToCache = [
   BASE_PATH + "rg-logo-192.png",
   BASE_PATH + "rg-logo-512.png",
   BASE_PATH + "rg-logo.svg",
-  BASE_PATH + "src/main.jsx",
-  BASE_PATH + "src/styles/global.css",
-  BASE_PATH + "src/styles/pdf.css",
+  // Only cache assets that actually exist in production
+  BASE_PATH + "assets/", // Vite builds CSS and JS into assets folder
 ];
 
 // Install service worker
