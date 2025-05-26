@@ -13,7 +13,8 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     // Get the correct path based on the deployment environment
     const swPath =
-      window.location.hostname === "localhost"
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1"
         ? "/service-worker.js"
         : "/portfolio/service-worker.js";
 
