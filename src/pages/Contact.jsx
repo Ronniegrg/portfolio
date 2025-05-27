@@ -500,13 +500,14 @@ const Contact = () => {
               <h2 className={styles.mapTitle}>Find Me</h2>
               <div className={styles.map}>
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d94368.0453009642!2d-83.06020541274471!3d42.30421295639062!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x883b2ac1b54f886b%3A0xb66cd49527fcdc51!2sWindsor%2C%20ON%2C%20Canada!5e0!3m2!1sen!2sus!4v1718019809073!5m2!1sen!2sus"
+                  src="https://maps.google.com/maps?q=Windsor,ON,Canada&t=&z=10&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="450"
                   style={{ border: 0 }}
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
+                  sandbox="allow-scripts allow-same-origin"
                   title="Map of Windsor, Ontario, Canada"
                 ></iframe>
               </div>
