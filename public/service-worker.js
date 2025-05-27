@@ -90,7 +90,8 @@ self.addEventListener("fetch", (event) => {
   // Skip handling requests with unsupported schemes
   const url = new URL(event.request.url);
   if (!["http:", "https:"].includes(url.protocol)) {
-    return; // Let the browser handle chrome-extension:// and other schemes natively
+    // Explicitly don't handle chrome-extension://, file://, data:, etc.
+    return;
   }
 
   event.respondWith(
@@ -140,6 +141,16 @@ self.addEventListener("fetch", (event) => {
         // Try to cache the response only if storage is available
         if (storageReady) {
           try {
+            // Additional safety check to prevent caching unsupported schemes
+            const requestUrl = new URL(event.request.url);
+            if (!["http:", "https:"].includes(requestUrl.protocol)) {
+              console.warn(
+                "Service Worker: Skipping cache for unsupported scheme:",
+                event.request.url
+              );
+              return response;
+            }
+
             const responseToCache = response.clone();
             const cache = await caches.open(CACHE_NAME);
             await cache.put(event.request, responseToCache);
