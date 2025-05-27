@@ -9,21 +9,28 @@ import { HelmetProvider } from "react-helmet-async";
 import AccessibilityManager from "./components/AccessibilityManager";
 
 // Global chunk loading error handler
-window.addEventListener('error', (event) => {
-  if (event.message && event.message.includes('Loading chunk') || 
-      event.message.includes('Failed to fetch dynamically imported module')) {
-    console.warn('Chunk loading failed, attempting to reload page...');
+window.addEventListener("error", (event) => {
+  if (
+    (event.message && event.message.includes("Loading chunk")) ||
+    event.message.includes("Failed to fetch dynamically imported module")
+  ) {
+    console.warn("Chunk loading failed, attempting to reload page...");
     // Reload the page to get fresh chunks
     window.location.reload();
   }
 });
 
 // Handle unhandled promise rejections for dynamic imports
-window.addEventListener('unhandledrejection', (event) => {
-  if (event.reason && event.reason.message && 
-      (event.reason.message.includes('Loading chunk') || 
-       event.reason.message.includes('Failed to fetch dynamically imported module'))) {
-    console.warn('Dynamic import failed, attempting to reload page...');
+window.addEventListener("unhandledrejection", (event) => {
+  if (
+    event.reason &&
+    event.reason.message &&
+    (event.reason.message.includes("Loading chunk") ||
+      event.reason.message.includes(
+        "Failed to fetch dynamically imported module"
+      ))
+  ) {
+    console.warn("Dynamic import failed, attempting to reload page...");
     event.preventDefault(); // Prevent the error from being logged
     window.location.reload();
   }

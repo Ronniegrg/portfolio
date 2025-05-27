@@ -11,29 +11,38 @@ const createLazyComponent = (importFunc, componentName) => {
   return lazy(async () => {
     let retries = 3;
     let delay = 1000;
-    
+
     const attemptLoad = async (attempt) => {
       try {
         return await importFunc();
       } catch (error) {
-        console.error(`Error loading ${componentName} (attempt ${attempt}):`, error);
-        
+        console.error(
+          `Error loading ${componentName} (attempt ${attempt}):`,
+          error
+        );
+
         // If it's a 404 error on a chunk, it might be a stale cache issue
-        if (error.message.includes('Failed to fetch dynamically imported module')) {
-          console.warn(`Chunk loading failed for ${componentName}. This might be due to a deployment update.`);
-          
+        if (
+          error.message.includes("Failed to fetch dynamically imported module")
+        ) {
+          console.warn(
+            `Chunk loading failed for ${componentName}. This might be due to a deployment update.`
+          );
+
           // For the last attempt, try to reload the page to get fresh chunks
           if (attempt === retries) {
-            console.log('Attempting page reload to fetch updated chunks...');
+            console.log("Attempting page reload to fetch updated chunks...");
             window.location.reload();
             return;
           }
         }
-        
+
         if (attempt < retries) {
           return new Promise((resolve, reject) => {
             setTimeout(() => {
-              attemptLoad(attempt + 1).then(resolve).catch(reject);
+              attemptLoad(attempt + 1)
+                .then(resolve)
+                .catch(reject);
             }, delay * attempt); // Exponential backoff
           });
         } else {
@@ -41,7 +50,7 @@ const createLazyComponent = (importFunc, componentName) => {
         }
       }
     };
-    
+
     return attemptLoad(1);
   });
 };
