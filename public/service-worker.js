@@ -88,9 +88,23 @@ self.addEventListener("install", (event) => {
 // Fetch from cache first, then network
 self.addEventListener("fetch", (event) => {
   // Skip handling requests with unsupported schemes
-  const url = new URL(event.request.url);
-  if (!["http:", "https:"].includes(url.protocol)) {
-    // Explicitly don't handle chrome-extension://, file://, data:, etc.
+  try {
+    const url = new URL(event.request.url);
+    if (!["http:", "https:"].includes(url.protocol)) {
+      // Explicitly don't handle chrome-extension://, file://, data:, etc.
+      console.debug(
+        "Service Worker: Skipping unsupported scheme:",
+        url.protocol,
+        event.request.url
+      );
+      return;
+    }
+  } catch (error) {
+    console.warn(
+      "Service Worker: Invalid URL, skipping:",
+      event.request.url,
+      error.message
+    );
     return;
   }
 
