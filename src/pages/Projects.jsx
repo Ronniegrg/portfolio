@@ -6,10 +6,64 @@ import {
   FaStar,
   FaCode,
   FaCalendarAlt,
+  FaGlobe,
 } from "react-icons/fa";
 import GitHubContributions from "../components/GitHubContributions";
 import styles from "./Projects.module.css";
 import { Helmet } from "react-helmet-async";
+
+// Fallback project data in case GitHub API fails
+const FALLBACK_PROJECTS = [
+  {
+    id: 1,
+    name: "portfolio",
+    description:
+      "Personal portfolio website built with React and modern web technologies",
+    homepage: "https://ronniegrg.github.io/portfolio",
+    html_url: "https://github.com/Ronniegrg/portfolio",
+    languages: ["JavaScript", "React", "CSS", "HTML"],
+    stargazers_count: 0,
+    forks_count: 0,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2025-01-01T00:00:00Z",
+  },
+  {
+    id: 2,
+    name: "ai-typing-assistant",
+    description: "AI-powered typing assistant application",
+    homepage: null,
+    html_url: "https://github.com/Ronniegrg/ai-typing-assistant",
+    languages: ["JavaScript", "Node.js"],
+    stargazers_count: 0,
+    forks_count: 0,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-12-01T00:00:00Z",
+  },
+  {
+    id: 3,
+    name: "countdown-timer",
+    description: "A customizable countdown timer application",
+    homepage: null,
+    html_url: "https://github.com/Ronniegrg/countdown-timer",
+    languages: ["JavaScript", "HTML", "CSS"],
+    stargazers_count: 0,
+    forks_count: 0,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-11-01T00:00:00Z",
+  },
+  {
+    id: 4,
+    name: "password-manager",
+    description: "Secure password management application",
+    homepage: null,
+    html_url: "https://github.com/Ronniegrg/password-manager",
+    languages: ["JavaScript", "Electron", "Node.js"],
+    stargazers_count: 0,
+    forks_count: 0,
+    created_at: "2024-01-01T00:00:00Z",
+    updated_at: "2024-10-01T00:00:00Z",
+  },
+];
 
 const Projects = () => {
   const [year, setYear] = useState(new Date().getFullYear());
@@ -24,7 +78,6 @@ const Projects = () => {
   const GITHUB_USERNAME = "Ronniegrg";
   // Get GitHub token from environment variable (set VITE_GITHUB_TOKEN in your .env file)
   const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -35,17 +88,17 @@ const Projects = () => {
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);
-
   // Fetch all years from repos
   useEffect(() => {
     const fetchYears = async () => {
@@ -56,7 +109,22 @@ const Projects = () => {
             ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
             : undefined
         );
-        if (!response.ok) return;
+
+        if (!response.ok) {
+          console.warn(
+            `GitHub API error: ${response.status}. Using fallback data.`
+          ); // Use fallback data to get years
+          const yearsSet = new Set();
+          FALLBACK_PROJECTS.forEach((repo) => {
+            yearsSet.add(new Date(repo.created_at).getFullYear());
+            yearsSet.add(new Date(repo.updated_at).getFullYear());
+          });
+          const yearsArr = Array.from(yearsSet).sort((a, b) => b - a);
+          setAllYears(yearsArr);
+          if (!yearsArr.includes(year)) setYear(yearsArr[0]);
+          return;
+        }
+
         const repos = await response.json();
         const yearsSet = new Set();
         repos.forEach((repo) => {
@@ -67,14 +135,19 @@ const Projects = () => {
         setAllYears(yearsArr);
         // If current year not in repos, default to most recent year
         if (!yearsArr.includes(year)) setYear(yearsArr[0]);
-      } catch {
-        // fallback: just show current year
-        setAllYears([year]);
+      } catch (error) {
+        console.warn("Error fetching years from GitHub API:", error); // fallback: use fallback data
+        const yearsSet = new Set();
+        FALLBACK_PROJECTS.forEach((repo) => {
+          yearsSet.add(new Date(repo.created_at).getFullYear());
+          yearsSet.add(new Date(repo.updated_at).getFullYear());
+        });
+        const yearsArr = Array.from(yearsSet).sort((a, b) => b - a);
+        setAllYears(yearsArr.length > 0 ? yearsArr : [year]);
       }
     };
     fetchYears();
-  }, [GITHUB_USERNAME, GITHUB_TOKEN]);
-
+  }, [GITHUB_USERNAME, GITHUB_TOKEN, year]);
   // Fetch GitHub repositories based on year
   useEffect(() => {
     const fetchRepositories = async () => {
@@ -89,9 +162,41 @@ const Projects = () => {
             ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
             : undefined
         );
-
         if (!response.ok) {
-          throw new Error(`GitHub API error: ${response.status}`);
+          console.warn(
+            `GitHub API error: ${response.status}. Using fallback data.`
+          );
+          // Use fallback data when API fails
+          const filteredRepos = FALLBACK_PROJECTS.filter((repo) => {
+            const createdDate = new Date(repo.created_at);
+            const updatedDate = new Date(repo.updated_at);
+            return (
+              createdDate.getFullYear() === year ||
+              updatedDate.getFullYear() === year
+            );
+          });
+
+          const formattedProjects = filteredRepos.map((repo) => ({
+            id: repo.id,
+            title: repo.name,
+            description:
+              repo.description ||
+              `A ${repo.languages[0] || "code"} repository.`,
+            github: repo.html_url,
+            demo: repo.homepage || "#",
+            githubPages: repo.homepage,
+            tags: repo.languages || ["Code"],
+            stars: repo.stargazers_count,
+            forks: repo.forks_count,
+            created: new Date(repo.created_at),
+            updated: new Date(repo.updated_at),
+            isForked: false,
+          }));
+
+          formattedProjects.sort((a, b) => b.updated - a.updated);
+          setProjects(formattedProjects);
+          setIsLoading(false);
+          return;
         }
 
         const repos = await response.json();
@@ -104,16 +209,17 @@ const Projects = () => {
             createdDate.getFullYear() === year ||
             updatedDate.getFullYear() === year
           );
-        });
-
-        // Format repositories for display
+        }); // Format repositories for display
         const formattedProjects = await Promise.all(
           filteredRepos.map(async (repo) => {
             // Try to fetch languages for the repo
             let languages = [];
             try {
+              // Construct the languages URL manually to avoid any potential issues
+              const languagesUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/languages`;
+
               const langResponse = await fetch(
-                repo.languages_url,
+                languagesUrl,
                 GITHUB_TOKEN
                   ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
                   : undefined
@@ -124,10 +230,47 @@ const Projects = () => {
               } else if (langResponse.status === 403) {
                 // Rate limit hit, skip languages for this repo
                 languages = repo.language ? [repo.language] : [];
+              } else if (langResponse.status === 404) {
+                // Repository doesn't have languages endpoint or not accessible
+                languages = repo.language ? [repo.language] : [];
               }
-            } catch {
+            } catch (error) {
+              // Log the error for debugging but continue with fallback
+              console.warn(
+                `Failed to fetch languages for ${repo.name}:`,
+                error
+              );
               // fallback: skip languages
               languages = repo.language ? [repo.language] : [];
+            }
+
+            // Check for GitHub Pages (skip this since it's causing 403 errors)
+            let githubPagesUrl = null;
+
+            // Fallback: check if repo name follows GitHub Pages pattern
+            if (repo.name === `${GITHUB_USERNAME}.github.io`) {
+              githubPagesUrl = `https://${GITHUB_USERNAME}.github.io`;
+            } else if (repo.has_pages) {
+              githubPagesUrl = `https://${GITHUB_USERNAME}.github.io/${repo.name}`;
+            }
+
+            // Additional fallback checks for common GitHub Pages patterns
+            if (!githubPagesUrl) {
+              // Check if the repo has a GitHub Pages URL pattern in homepage
+              if (repo.homepage && repo.homepage.includes(".github.io")) {
+                githubPagesUrl = repo.homepage;
+              }
+              // Check for common project names that might have pages
+              else if (
+                repo.name.toLowerCase().includes("portfolio") ||
+                repo.name.toLowerCase().includes("website") ||
+                repo.name.toLowerCase().includes("blog") ||
+                repo.name.toLowerCase() === "portfolio" ||
+                repo.name === `${GITHUB_USERNAME}.github.io`
+              ) {
+                // These types of repos commonly have GitHub Pages
+                githubPagesUrl = `https://${GITHUB_USERNAME}.github.io/${repo.name}`;
+              }
             }
 
             // Create formatted project object
@@ -138,6 +281,7 @@ const Projects = () => {
                 repo.description || `A ${repo.language || "code"} repository.`,
               github: repo.html_url,
               demo: repo.homepage || "#",
+              githubPages: githubPagesUrl,
               tags:
                 languages.length > 0
                   ? languages
@@ -151,22 +295,46 @@ const Projects = () => {
               isForked: repo.fork,
             };
           })
-        );
-
-        // Sort projects by updated date (newest first)
+        ); // Sort projects by updated date (newest first)
         formattedProjects.sort((a, b) => b.updated - a.updated);
 
         setProjects(formattedProjects);
       } catch (err) {
         console.error("Error fetching GitHub repositories:", err);
-        setError(
-          "Failed to load projects from GitHub. Please try again later."
-        );
+        console.warn("Using fallback data due to API error");
+
+        // Use fallback data when API fails
+        const filteredRepos = FALLBACK_PROJECTS.filter((repo) => {
+          const createdDate = new Date(repo.created_at);
+          const updatedDate = new Date(repo.updated_at);
+          return (
+            createdDate.getFullYear() === year ||
+            updatedDate.getFullYear() === year
+          );
+        });
+
+        const formattedProjects = filteredRepos.map((repo) => ({
+          id: repo.id,
+          title: repo.name,
+          description:
+            repo.description || `A ${repo.languages[0] || "code"} repository.`,
+          github: repo.html_url,
+          demo: repo.homepage || "#",
+          githubPages: repo.homepage,
+          tags: repo.languages || ["Code"],
+          stars: repo.stargazers_count,
+          forks: repo.forks_count,
+          created: new Date(repo.created_at),
+          updated: new Date(repo.updated_at),
+          isForked: false,
+        }));
+
+        formattedProjects.sort((a, b) => b.updated - a.updated);
+        setProjects(formattedProjects);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchRepositories();
   }, [year, GITHUB_USERNAME, GITHUB_TOKEN]);
 
@@ -321,11 +489,9 @@ const Projects = () => {
                           </span>
                         </div>
                       </div>
-
                       <p className={styles.projectDescription}>
                         {project.description}
                       </p>
-
                       <div className={styles.projectDates}>
                         <span className={styles.dateItem}>
                           <FaCalendarAlt className={styles.dateIcon} /> Created:{" "}
@@ -336,15 +502,13 @@ const Projects = () => {
                           {formatDate(project.updated)}
                         </span>
                       </div>
-
                       <div className={styles.technologies}>
                         {project.tags.map((tag, index) => (
                           <span key={index} className={styles.techTag}>
                             {tag}
                           </span>
                         ))}
-                      </div>
-
+                      </div>{" "}
                       <div className={styles.links}>
                         <a
                           href={project.github}
@@ -353,17 +517,28 @@ const Projects = () => {
                           className={styles.link}
                         >
                           <FaGithub /> GitHub
-                        </a>
-                        {project.demo !== "#" && (
+                        </a>{" "}
+                        {project.githubPages && (
                           <a
-                            href={project.demo}
+                            href={project.githubPages}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`${styles.link} ${styles.demoLink}`}
+                            className={`${styles.link} ${styles.pagesLink}`}
                           >
-                            <FaExternalLinkAlt /> Live Demo
+                            <FaGlobe /> GitHub Pages
                           </a>
                         )}
+                        {project.demo !== "#" &&
+                          project.demo !== project.githubPages && (
+                            <a
+                              href={project.demo}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={`${styles.link} ${styles.demoLink}`}
+                            >
+                              <FaExternalLinkAlt /> Live Demo
+                            </a>
+                          )}
                       </div>
                     </div>
                   </div>

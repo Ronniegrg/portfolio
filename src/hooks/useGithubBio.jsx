@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
 
+// Fallback data in case GitHub API fails
+const FALLBACK_DATA = {
+  bio: "Software Developer passionate about creating efficient, user-friendly applications.",
+  repoCount: 10,
+  location: "Ontario, Canada",
+  latestRepo: "portfolio",
+  recentActivity: "Working on portfolio and various coding projects",
+};
+
 /**
  * Custom hook for fetching GitHub user information and latest activity
  * @param {string} username - GitHub username (default: 'ronniegrg')
@@ -34,9 +43,12 @@ const useGithubBio = (username = "ronniegrg") => {
         clearTimeout(timeoutId);
 
         if (!userResponse.ok) {
-          throw new Error(
-            `Failed to fetch GitHub info: ${userResponse.statusText}`
+          console.warn(
+            `GitHub API error: ${userResponse.status}. Using fallback data.`
           );
+          setGithubInfo(FALLBACK_DATA);
+          setBioLoading(false);
+          return;
         }
 
         const userData = await userResponse.json();
@@ -47,7 +59,18 @@ const useGithubBio = (username = "ronniegrg") => {
         );
 
         if (!reposResponse.ok) {
-          throw new Error(`Failed to fetch repos: ${reposResponse.statusText}`);
+          console.warn(
+            `GitHub repos API error: ${reposResponse.status}. Using partial fallback data.`
+          );
+          setGithubInfo({
+            bio: userData.bio || FALLBACK_DATA.bio,
+            repoCount: userData.public_repos || FALLBACK_DATA.repoCount,
+            location: userData.location || FALLBACK_DATA.location,
+            latestRepo: FALLBACK_DATA.latestRepo,
+            recentActivity: FALLBACK_DATA.recentActivity,
+          });
+          setBioLoading(false);
+          return;
         }
 
         const reposData = await reposResponse.json();
@@ -58,15 +81,17 @@ const useGithubBio = (username = "ronniegrg") => {
         }
 
         setGithubInfo({
-          bio: userData.bio || "",
-          repoCount: userData.public_repos || 0,
-          location: userData.location || "",
-          latestRepo: latestRepo,
+          bio: userData.bio || FALLBACK_DATA.bio,
+          repoCount: userData.public_repos || FALLBACK_DATA.repoCount,
+          location: userData.location || FALLBACK_DATA.location,
+          latestRepo: latestRepo || FALLBACK_DATA.latestRepo,
           recentActivity: `Working on ${latestRepo || "projects"}`,
         });
       } catch (error) {
         console.error("Error fetching GitHub information:", error);
-        setBioError("Could not load GitHub information");
+        console.warn("Using fallback GitHub data");
+        setGithubInfo(FALLBACK_DATA);
+        setBioError(null); // Don't show error since we have fallback data
       } finally {
         setBioLoading(false);
       }
