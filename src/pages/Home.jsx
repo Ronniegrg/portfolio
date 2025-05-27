@@ -161,7 +161,7 @@ const Home = () => {
                   View My Work <FaArrowRight className={styles.btnIcon} />
                 </Link>
                 <a
-                  href="/Rouni-Gorgees.pdf"
+                  href="/portfolio/Rouni-Gorgees.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.secondaryButton}

@@ -90,11 +90,11 @@ const About = () => {
 
   // Map education id to PDF file names in public folder
   const pdfFiles = {
-    1: "/Cert2863203_OmniStudioDeveloper_20230109.pdf",
-    2: "/Cert2595678_PlatformDeveloperI_20220926.pdf",
-    3: "/Cert2499846_Administrator_20220817.pdf",
-    4: "/Web-Design.pdf",
-    5: "/Computer-System-Technology-Software-Development.pdf",
+    1: "/portfolio/Cert2863203_OmniStudioDeveloper_20230109.pdf",
+    2: "/portfolio/Cert2595678_PlatformDeveloperI_20220926.pdf",
+    3: "/portfolio/Cert2499846_Administrator_20220817.pdf",
+    4: "/portfolio/Web-Design.pdf",
+    5: "/portfolio/Computer-System-Technology-Software-Development.pdf",
   };
 
   return (

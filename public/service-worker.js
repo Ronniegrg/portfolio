@@ -16,6 +16,7 @@ const urlsToCache = [
   BASE_PATH + "rg-logo-192.png",
   BASE_PATH + "rg-logo-512.png",
   BASE_PATH + "rg-logo.svg",
+  BASE_PATH + "Rouni-Gorgees.pdf", // Resume file for quick access
   // Note: We'll cache the main page and other assets dynamically as they're requested
   // since Vite generates hashed filenames that we can't predict at build time
 ];
