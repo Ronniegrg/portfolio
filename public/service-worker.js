@@ -1,5 +1,5 @@
 // Service Worker for Rouni Gorgees Portfolio
-const CACHE_NAME = "rg-portfolio-v1";
+const CACHE_NAME = "rg-portfolio-v2";
 // Base path from vite.config.js
 const BASE_PATH = "/portfolio/";
 const urlsToCache = [
@@ -9,15 +9,19 @@ const urlsToCache = [
   BASE_PATH + "rg-logo-192.png",
   BASE_PATH + "rg-logo-512.png",
   BASE_PATH + "rg-logo.svg",
-  // Only cache assets that actually exist in production
-  BASE_PATH + "assets/", // Vite builds CSS and JS into assets folder
+  // Note: Specific assets will be cached dynamically as they're requested
+  // since Vite generates hashed filenames that we can't predict at build time
 ];
 
 // Install service worker
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
+      return cache.addAll(urlsToCache).catch((error) => {
+        console.error("Service worker cache.addAll failed:", error);
+        // Still install the service worker even if some resources fail to cache
+        return Promise.resolve();
+      });
     })
   );
 });
