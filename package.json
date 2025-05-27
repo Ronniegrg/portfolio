@@ -13,7 +13,8 @@
     "install-safe": "npm install --no-bin-links",
     "setup": "npm install --no-bin-links && npm run clean",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "deploy-force": "gh-pages -d dist --no-history"
   },
   "dependencies": {
     "chart.js": "^4.4.9",
