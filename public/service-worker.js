@@ -7,7 +7,7 @@ const isTrackingPreventionActive = () => {
   return userAgent.includes("safari") || userAgent.includes("edge");
 };
 
-const CACHE_NAME = "rg-portfolio-v2";
+const CACHE_NAME = "rg-portfolio-v3"; // Increment version to invalidate old cache
 // Base path from vite.config.js
 const BASE_PATH = "/portfolio/";
 const urlsToCache = [
@@ -118,12 +118,18 @@ self.addEventListener("fetch", (event) => {
       try {
         const response = await fetch(event.request);
 
+        // Don't cache JavaScript chunks to avoid stale cache issues with Vite builds
+        // JavaScript files with hashes should always be fetched fresh
+        const isJSChunk = event.request.url.includes('/assets/') && 
+                         (event.request.url.endsWith('.js') || event.request.url.endsWith('.mjs'));
+        
         // Don't cache if not a valid response or if it's not a GET request
         if (
           !response ||
           response.status !== 200 ||
           event.request.method !== "GET" ||
-          !response.headers.get("content-type")
+          !response.headers.get("content-type") ||
+          isJSChunk  // Don't cache JS chunks
         ) {
           return response;
         }

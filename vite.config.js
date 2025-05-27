@@ -16,12 +16,20 @@ export default defineConfig({
           pdf: ["react-pdf", "pdfjs-dist"],
           icons: ["react-icons"],
         },
-        // Add cache busting for chunks
+        // Add cache busting for chunks with more predictable naming
         chunkFileNames: "assets/[name]-[hash].js",
         entryFileNames: "assets/[name]-[hash].js",
         assetFileNames: "assets/[name]-[hash].[ext]",
       },
+      // Add error handling for chunk loading
+      onwarn(warning, warn) {
+        // Suppress certain warnings that don't affect functionality
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
+        warn(warning);
+      },
     },
+    // Add chunk size warnings
+    chunkSizeWarningLimit: 1000,
   },
   // Fix source map error
   optimizeDeps: {

@@ -23,16 +23,31 @@ const createLazyComponent = (importFunc, componentName) => {
 
         // If it's a 404 error on a chunk, it might be a stale cache issue
         if (
-          error.message.includes("Failed to fetch dynamically imported module")
+          error.message.includes("Failed to fetch dynamically imported module") ||
+          error.message.includes("ChunkLoadError") ||
+          error.message.includes("Loading chunk")
         ) {
           console.warn(
             `Chunk loading failed for ${componentName}. This might be due to a deployment update.`
           );
 
+          // Clear service worker cache
+          if ('caches' in window) {
+            try {
+              const cacheNames = await caches.keys();
+              await Promise.all(cacheNames.map(name => caches.delete(name)));
+              console.log('Service worker cache cleared');
+            } catch (cacheError) {
+              console.warn('Failed to clear cache:', cacheError);
+            }
+          }
+
           // For the last attempt, try to reload the page to get fresh chunks
           if (attempt === retries) {
             console.log("Attempting page reload to fetch updated chunks...");
-            window.location.reload();
+            const currentUrl = window.location.href;
+            const separator = currentUrl.includes('?') ? '&' : '?';
+            window.location.href = currentUrl + separator + '_reload=' + Date.now();
             return;
           }
         }
@@ -46,7 +61,36 @@ const createLazyComponent = (importFunc, componentName) => {
             }, delay * attempt); // Exponential backoff
           });
         } else {
-          throw error;
+          // Return a fallback component on final failure
+          console.error(`Failed to load ${componentName} after ${retries} attempts`);
+          return {
+            default: () => (
+              <div style={{ 
+                padding: '2rem', 
+                textAlign: 'center',
+                backgroundColor: 'var(--color-error-bg, #fee)',
+                border: '1px solid var(--color-error, #d00)',
+                borderRadius: '8px',
+                margin: '1rem'
+              }}>
+                <h2>Failed to Load Component</h2>
+                <p>There was an error loading the {componentName} component.</p>
+                <button 
+                  onClick={() => window.location.reload()}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    backgroundColor: 'var(--color-primary, #007bff)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Reload Page
+                </button>
+              </div>
+            )
+          };
         }
       }
     };
