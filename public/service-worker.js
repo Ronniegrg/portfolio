@@ -32,7 +32,7 @@ async function isStorageAvailable() {
     storageAvailable = true;
     // Storage is available
     return true;
-  } catch (error) {
+  } catch {
     storageAvailable = false;
     if (!hasLoggedStorageWarning) {
       console.info(
