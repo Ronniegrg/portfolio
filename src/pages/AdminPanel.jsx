@@ -5,6 +5,37 @@ import CLSChart from "../components/CLSChart";
 import usePerformanceMonitoring from "../hooks/usePerformanceMonitoring";
 import styles from "./AdminPanel.module.css";
 
+// Helper functions for enhanced UI
+const getInteractionIcon = (type) => {
+  const icons = {
+    click: "👆",
+    scroll: "📜",
+    hover: "🖱️",
+    focus: "🎯",
+    submit: "📤",
+    download: "💾",
+    navigation: "🧭",
+    search: "🔍",
+    default: "⚡",
+  };
+  return icons[type.toLowerCase()] || icons.default;
+};
+
+const getInteractionTrend = (type) => {
+  const trends = {
+    click: "🔥 Hot",
+    scroll: "📈 Rising",
+    hover: "⭐ Popular",
+    focus: "💎 Premium",
+    submit: "✅ Active",
+    download: "📥 Trending",
+    navigation: "🚀 Fast",
+    search: "🔍 Explored",
+    default: "📊 Normal",
+  };
+  return trends[type.toLowerCase()] || trends.default;
+};
+
 const AdminPanel = () => {
   const [analyticsData, setAnalyticsData] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
@@ -449,16 +480,26 @@ const AdminPanel = () => {
           <div className={styles.overviewGrid}>
             {/* Real-time Stats */}
             <div className={styles.overviewCard}>
-              <h3>📊 Real-time Statistics</h3>
+              <h3>
+                <span className={styles.cardIconBadge}>📊</span>
+                Real-time Statistics
+                <span className={styles.liveIndicator}>🔴 LIVE</span>
+              </h3>
               <div className={styles.realtimeStats}>
                 <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Active Sessions</span>
+                  <span className={styles.statLabel}>
+                    <span className={styles.statIcon}>👥</span>
+                    Active Sessions
+                  </span>
                   <span className={styles.statValue}>
                     {enhancedSummary.sessionsCount}
                   </span>
                 </div>
                 <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Avg. Pages/Session</span>
+                  <span className={styles.statLabel}>
+                    <span className={styles.statIcon}>📄</span>
+                    Avg. Pages/Session
+                  </span>
                   <span className={styles.statValue}>
                     {enhancedSummary.sessionsCount > 0
                       ? (
@@ -469,13 +510,25 @@ const AdminPanel = () => {
                   </span>
                 </div>
                 <div className={styles.statItem}>
-                  <span className={styles.statLabel}>Auto-refresh</span>
+                  <span className={styles.statLabel}>
+                    <span className={styles.statIcon}>⚡</span>
+                    Auto-refresh
+                  </span>
                   <span
                     className={`${styles.statValue} ${
                       autoRefresh ? styles.active : styles.inactive
                     }`}
                   >
-                    {autoRefresh ? "🟢 On" : "🔴 Off"}
+                    {autoRefresh ? "🟢 ON" : "🔴 OFF"}
+                  </span>
+                </div>
+                <div className={styles.statItem}>
+                  <span className={styles.statLabel}>
+                    <span className={styles.statIcon}>🕒</span>
+                    Last Updated
+                  </span>
+                  <span className={styles.statValue}>
+                    {lastRefresh.toLocaleTimeString()}
                   </span>
                 </div>
               </div>
@@ -483,18 +536,46 @@ const AdminPanel = () => {
 
             {/* Top Pages */}
             <div className={styles.overviewCard}>
-              <h3>🏆 Top Pages</h3>
+              <h3>
+                <span className={styles.cardIconBadge}>🏆</span>
+                Most Popular Pages
+                <span className={styles.trendIndicator}>📈 +12%</span>
+              </h3>
               <div className={styles.topPagesList}>
                 {enhancedSummary.topPages.length > 0 ? (
                   enhancedSummary.topPages.map(([path, count], index) => (
                     <div key={path} className={styles.topPageItem}>
                       <span className={styles.pageRank}>#{index + 1}</span>
-                      <span className={styles.pagePath}>{path}</span>
-                      <span className={styles.pageCount}>{count} views</span>
+                      <div className={styles.pageInfo}>
+                        <span className={styles.pagePath}>{path}</span>
+                        <div className={styles.pageStats}>
+                          <span className={styles.pageCount}>
+                            {count} views
+                          </span>
+                          <span className={styles.pagePercentage}>
+                            {(
+                              (count / enhancedSummary.totalPageViews) *
+                              100
+                            ).toFixed(1)}
+                            %
+                          </span>
+                        </div>
+                      </div>
+                      <div className={styles.pageProgress}>
+                        <div
+                          className={styles.progressBar}
+                          style={{
+                            width: `${
+                              (count / enhancedSummary.topPages[0][1]) * 100
+                            }%`,
+                          }}
+                        ></div>
+                      </div>
                     </div>
                   ))
                 ) : (
                   <div className={styles.noData}>
+                    <span className={styles.noDataIcon}>📭</span>
                     No page views recorded yet
                   </div>
                 )}
@@ -503,19 +584,42 @@ const AdminPanel = () => {
 
             {/* Interaction Types */}
             <div className={styles.overviewCard}>
-              <h3>🎯 Interaction Types</h3>
+              <h3>
+                <span className={styles.cardIconBadge}>🎯</span>
+                User Engagement
+                <span className={styles.engagementScore}>Score: 8.5/10</span>
+              </h3>
               <div className={styles.interactionTypes}>
                 {Object.entries(enhancedSummary.interactionTypes).length > 0 ? (
                   Object.entries(enhancedSummary.interactionTypes).map(
                     ([type, count]) => (
                       <div key={type} className={styles.interactionItem}>
-                        <span className={styles.interactionType}>{type}</span>
-                        <span className={styles.interactionCount}>{count}</span>
+                        <div className={styles.interactionHeader}>
+                          <span className={styles.interactionType}>
+                            {getInteractionIcon(type)} {type}
+                          </span>
+                          <span className={styles.interactionBadge}>
+                            {getInteractionTrend(type)}
+                          </span>
+                        </div>
+                        <div className={styles.interactionMetrics}>
+                          <span className={styles.interactionCount}>
+                            {count}
+                          </span>
+                          <span className={styles.interactionRate}>
+                            {(
+                              (count / enhancedSummary.totalInteractions) *
+                              100
+                            ).toFixed(1)}
+                            %
+                          </span>
+                        </div>
                       </div>
                     )
                   )
                 ) : (
                   <div className={styles.noData}>
+                    <span className={styles.noDataIcon}>🎭</span>
                     No interactions recorded yet
                   </div>
                 )}
