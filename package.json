@@ -14,7 +14,8 @@
     "setup": "npm install --no-bin-links && npm run clean",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "deploy-force": "gh-pages -d dist --no-history"
+    "deploy-force": "gh-pages -d dist --no-history",
+    "deploy-fresh": "node deploy-fresh.js"
   },
   "dependencies": {
     "chart.js": "^4.4.9",

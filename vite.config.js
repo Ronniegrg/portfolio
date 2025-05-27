@@ -30,6 +30,8 @@ export default defineConfig({
     },
     // Add chunk size warnings
     chunkSizeWarningLimit: 1000,
+    // Force fresh builds and prevent cache issues
+    emptyOutDir: true,
   },
   // Fix source map error
   optimizeDeps: {
