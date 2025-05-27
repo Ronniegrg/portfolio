@@ -7,6 +7,21 @@ export default defineConfig({
   plugins: [react()],
   build: {
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        // Ensure consistent chunk naming to help with cache invalidation
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          charts: ['chart.js', 'react-chartjs-2'],
+          pdf: ['react-pdf', 'pdfjs-dist'],
+          icons: ['react-icons'],
+        },
+        // Add cache busting for chunks
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+      },
+    },
   },
   // Fix source map error
   optimizeDeps: {
