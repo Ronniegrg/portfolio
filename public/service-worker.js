@@ -1,27 +1,44 @@
 // Service Worker for Rouni Gorgees Portfolio
+console.log("Service Worker: Script loaded");
+
 const CACHE_NAME = "rg-portfolio-v2";
 // Base path from vite.config.js
 const BASE_PATH = "/portfolio/";
 const urlsToCache = [
-  BASE_PATH,
-  BASE_PATH + "index.html",
+  // Only cache static assets that we know exist
   BASE_PATH + "manifest.webmanifest",
   BASE_PATH + "rg-logo-192.png",
   BASE_PATH + "rg-logo-512.png",
   BASE_PATH + "rg-logo.svg",
-  // Note: Specific assets will be cached dynamically as they're requested
+  // Note: We'll cache the main page and other assets dynamically as they're requested
   // since Vite generates hashed filenames that we can't predict at build time
 ];
+
+console.log("Service Worker: URLs to cache:", urlsToCache);
 
 // Install service worker
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache).catch((error) => {
-        console.error("Service worker cache.addAll failed:", error);
-        // Still install the service worker even if some resources fail to cache
-        return Promise.resolve();
+    caches.open(CACHE_NAME).then(async (cache) => {
+      // Cache resources individually to handle failures gracefully
+      const cachePromises = urlsToCache.map(async (url) => {
+        try {
+          const response = await fetch(url);
+          if (response.ok) {
+            await cache.put(url, response);
+            console.log(`Successfully cached: ${url}`);
+          } else {
+            console.warn(
+              `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+            );
+          }
+        } catch (error) {
+          console.warn(`Error caching ${url}:`, error.message);
+        }
       });
+
+      await Promise.allSettled(cachePromises);
+      console.log("Service worker installation completed");
     })
   );
 });
@@ -34,25 +51,52 @@ self.addEventListener("fetch", (event) => {
       if (response) {
         return response;
       }
-      return fetch(event.request).then((response) => {
-        // Don't cache if not a valid response or if it's not a GET request
-        if (
-          !response ||
-          response.status !== 200 ||
-          event.request.method !== "GET"
-        ) {
+
+      // Fetch from network
+      return fetch(event.request)
+        .then((response) => {
+          // Don't cache if not a valid response or if it's not a GET request
+          if (
+            !response ||
+            response.status !== 200 ||
+            event.request.method !== "GET" ||
+            !response.headers.get("content-type")
+          ) {
+            return response;
+          }
+
+          // Clone the response
+          const responseToCache = response.clone();
+
+          // Cache the response asynchronously
+          caches
+            .open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(event.request, responseToCache).catch((error) => {
+                console.warn(
+                  "Failed to cache resource:",
+                  event.request.url,
+                  error
+                );
+              });
+            })
+            .catch((error) => {
+              console.warn("Failed to open cache:", error);
+            });
+
           return response;
-        }
-
-        // Clone the response
-        var responseToCache = response.clone();
-
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
+        })
+        .catch((error) => {
+          // Network request failed
+          console.warn("Network request failed:", event.request.url, error);
+          // Return a generic offline response for navigation requests
+          if (event.request.mode === "navigate") {
+            return caches.match(BASE_PATH).then((cachedResponse) => {
+              return cachedResponse || new Response("Offline", { status: 503 });
+            });
+          }
+          throw error;
         });
-
-        return response;
-      });
     })
   );
 });
