@@ -5,9 +5,9 @@
  * This script ensures a clean build and deployment to prevent cache issues
  */
 
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
+import { execSync } from "child_process";
+import fs from "fs";
+import process from "process";
 
 console.log("🧹 Starting fresh deployment...");
 
@@ -39,6 +39,6 @@ try {
   console.log("📝 Note: GitHub Pages may take 5-10 minutes to update");
   console.log("🌐 Your site: https://ronniegrg.github.io/portfolio/");
 } catch (error) {
-  console.error("❌ Deployment failed:", error.message);
+  console.error("❌ Deployment failed:", error);
   process.exit(1);
 }
