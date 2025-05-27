@@ -6,26 +6,43 @@ import usePerformanceMonitoring from "./hooks/usePerformanceMonitoring";
 import SimpleAnalytics from "./components/SimpleAnalytics";
 import "./styles/global.css";
 
-// Create lazy imports with retry logic for better error handling
+// Create lazy imports with enhanced retry logic for better error handling
 const createLazyComponent = (importFunc, componentName) => {
   return lazy(async () => {
-    try {
-      return await importFunc();
-    } catch (error) {
-      console.error(`Error loading ${componentName}:`, error);
-      // Retry once after a short delay
-      return new Promise((resolve, reject) => {
-        setTimeout(async () => {
-          try {
-            const component = await importFunc();
-            resolve(component);
-          } catch (retryError) {
-            console.error(`Retry failed for ${componentName}:`, retryError);
-            reject(retryError);
+    let retries = 3;
+    let delay = 1000;
+    
+    const attemptLoad = async (attempt) => {
+      try {
+        return await importFunc();
+      } catch (error) {
+        console.error(`Error loading ${componentName} (attempt ${attempt}):`, error);
+        
+        // If it's a 404 error on a chunk, it might be a stale cache issue
+        if (error.message.includes('Failed to fetch dynamically imported module')) {
+          console.warn(`Chunk loading failed for ${componentName}. This might be due to a deployment update.`);
+          
+          // For the last attempt, try to reload the page to get fresh chunks
+          if (attempt === retries) {
+            console.log('Attempting page reload to fetch updated chunks...');
+            window.location.reload();
+            return;
           }
-        }, 1000);
-      });
-    }
+        }
+        
+        if (attempt < retries) {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              attemptLoad(attempt + 1).then(resolve).catch(reject);
+            }, delay * attempt); // Exponential backoff
+          });
+        } else {
+          throw error;
+        }
+      }
+    };
+    
+    return attemptLoad(1);
   });
 };
 
@@ -102,58 +119,60 @@ function App() {
         </div>
       }
     >
-      {/* Add analytics tracking */}
-      <SimpleAnalytics />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Home />
-            </Layout>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Layout>
-              <About />
-            </Layout>
-          }
-        />
-        <Route
-          path="/projects"
-          element={
-            <Layout>
-              <Projects />
-            </Layout>
-          }
-        />
-        <Route
-          path="/contact"
-          element={
-            <Layout>
-              <Contact />
-            </Layout>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <Layout>
-              <AdminPanel />
-            </Layout>
-          }
-        />
-        <Route
-          path="*"
-          element={
-            <Layout>
-              <NotFound />
-            </Layout>
-          }
-        />
-      </Routes>
+      <ErrorBoundary>
+        {/* Add analytics tracking */}
+        <SimpleAnalytics />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Layout>
+                <Home />
+              </Layout>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <Layout>
+                <About />
+              </Layout>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <Layout>
+                <Projects />
+              </Layout>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <Layout>
+                <Contact />
+              </Layout>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <Layout>
+                <AdminPanel />
+              </Layout>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Layout>
+                <NotFound />
+              </Layout>
+            }
+          />
+        </Routes>
+      </ErrorBoundary>
     </Suspense>
   );
 }
