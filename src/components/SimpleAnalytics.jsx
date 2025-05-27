@@ -18,7 +18,7 @@ const SimpleAnalytics = () => {
           referrer: document.referrer || "direct",
         };
 
-        // Store analytics in localStorage
+        // Store analytics in localStorage with error handling for tracking prevention
         const analytics = JSON.parse(
           localStorage.getItem("rg_analytics") || "[]"
         );
@@ -32,8 +32,9 @@ const SimpleAnalytics = () => {
         localStorage.setItem("rg_analytics", JSON.stringify(analytics));
 
         // Page view tracked successfully
-      } catch (error) {
-        console.error("Analytics error:", error);
+      } catch {
+        // Silent fail if localStorage is blocked by tracking prevention
+        // Analytics tracking disabled due to privacy settings
       }
     };
 
@@ -63,7 +64,7 @@ const SimpleAnalytics = () => {
 
           localStorage.setItem("rg_interactions", JSON.stringify(clicks));
         } catch {
-          // Silent fail for non-critical feature
+          // Silent fail if localStorage is blocked by tracking prevention
         }
       }
     };

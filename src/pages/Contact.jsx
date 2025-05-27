@@ -499,30 +499,29 @@ const Contact = () => {
             <div className={styles.mapContainer}>
               <h2 className={styles.mapTitle}>Find Me</h2>
               <div className={styles.map}>
-                <iframe
-                  src="https://www.openstreetmap.org/export/embed.html?bbox=-83.2%2C42.1%2C-82.8%2C42.4&amp;layer=mapnik&amp;marker=42.3149%2C-83.0364"
-                  width="100%"
-                  height="450"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Map of Windsor, Ontario, Canada"
-                ></iframe>
-              </div>
-              <div className={styles.mapFallback}>
-                <p>
-                  <FaMapMarkerAlt className={styles.locationIcon} />
-                  Windsor, Ontario, Canada
-                </p>
-                <a
-                  href="https://www.google.com/maps/search/Windsor,+ON,+Canada"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.mapLink}
-                >
-                  View on Google Maps
-                </a>
+                <div className={styles.mapPlaceholder}>
+                  <div className={styles.mapIcon}>
+                    <FaMapMarkerAlt />
+                  </div>
+                  <h3>Windsor, Ontario, Canada</h3>
+                  <p>View on External Map</p>
+                  <a
+                    href="https://www.openstreetmap.org/search?query=Windsor%2C%20Ontario%2C%20Canada"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.mapLink}
+                  >
+                    Open in OpenStreetMap
+                  </a>
+                  <a
+                    href="https://maps.google.com/maps?q=Windsor,ON,Canada"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.mapLink}
+                  >
+                    Open in Google Maps
+                  </a>
+                </div>
               </div>
             </div>
           </div>

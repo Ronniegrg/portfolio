@@ -70,11 +70,8 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
         await document.requestStorageAccess();
         storageAccessGranted = true;
       }
-    } catch (error) {
-      console.warn(
-        "Storage access request failed (tracking prevention may be active):",
-        error.message
-      );
+    } catch {
+      // Silent fail for storage access request
       // Continue with service worker registration even if storage access fails
     }
 

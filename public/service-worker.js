@@ -18,6 +18,7 @@ const urlsToCache = [
 
 // Check if storage is available (handles tracking prevention)
 let storageAvailable = null; // Cache the result
+let hasLoggedStorageWarning = false; // Prevent spam logging
 
 async function isStorageAvailable() {
   if (storageAvailable !== null) {
@@ -33,10 +34,12 @@ async function isStorageAvailable() {
     return true;
   } catch (error) {
     storageAvailable = false;
-    console.warn(
-      "Service Worker: Storage access blocked by browser (tracking prevention):",
-      error.message
-    );
+    if (!hasLoggedStorageWarning) {
+      console.info(
+        "Service Worker: Running in privacy mode - storage access limited by browser tracking prevention"
+      );
+      hasLoggedStorageWarning = true;
+    }
     // Running in fallback mode without caching
     return false;
   }
