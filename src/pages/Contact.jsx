@@ -8,9 +8,18 @@ import {
   FaPaperPlane,
   FaCheckCircle,
   FaExclamationCircle,
+  FaShieldAlt,
 } from "react-icons/fa";
 import styles from "./Contact.module.css";
 import { Helmet } from "react-helmet-async";
+import useRateLimit from "../hooks/useRateLimit";
+import HoneypotField from "../components/HoneypotField";
+import SecurityInfo from "../components/SecurityInfo";
+import {
+  sanitizeInput,
+  isValidEmail,
+  containsSuspiciousContent,
+} from "../utils/security";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -24,8 +33,13 @@ const Contact = () => {
   const [isFocused, setIsFocused] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [honeypotValue, setHoneypotValue] = useState("");
   const formRef = useRef(null);
   const contactRef = useRef(null);
+
+  // Rate limiting hook (3 attempts per 15 minutes)
+  const { isBlocked, remainingTime, checkRateLimit, recordAttempt } =
+    useRateLimit(3, 15 * 60 * 1000);
 
   // Add animation when component mounts
   useEffect(() => {
@@ -80,6 +94,10 @@ const Contact = () => {
     validateField(name, formData[name]);
   };
 
+  const handleHoneypotChange = (value) => {
+    setHoneypotValue(value);
+  };
+
   const validateField = (name, value) => {
     let error = "";
 
@@ -95,7 +113,7 @@ const Contact = () => {
       case "email":
         if (!value.trim()) {
           error = "Email is required";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        } else if (!isValidEmail(value)) {
           error = "Please enter a valid email address";
         }
         break;
@@ -144,6 +162,33 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check honeypot field (spam protection)
+    if (honeypotValue.trim() !== "") {
+      console.warn("Honeypot field filled - potential spam attempt");
+      setSubmitStatus({
+        success: false,
+        message: "Security validation failed. Please try again.",
+      });
+      return;
+    }
+
+    // Check rate limiting
+    if (isBlocked) {
+      setSubmitStatus({
+        success: false,
+        message: `Too many attempts. Please wait ${remainingTime} minute(s) before trying again.`,
+      });
+      return;
+    }
+
+    if (!checkRateLimit()) {
+      setSubmitStatus({
+        success: false,
+        message: `Rate limit exceeded. Please wait ${remainingTime} minute(s) before trying again.`,
+      });
+      return;
+    }
+
     if (!validateForm()) {
       // Scroll to the first error
       const firstErrorField = document.querySelector(`.${styles.errorMsg}`);
@@ -157,6 +202,9 @@ const Contact = () => {
     setSubmitStatus(null);
 
     try {
+      // Record the attempt for rate limiting
+      recordAttempt();
+
       // Check if EmailJS is configured
       if (
         !import.meta.env.VITE_EMAILJS_PUBLIC_KEY ||
@@ -168,12 +216,35 @@ const Contact = () => {
         );
       }
 
+      // Additional security: Input sanitization and validation
+      const sanitizedData = {
+        name: sanitizeInput(formData.name),
+        email: sanitizeInput(formData.email),
+        subject: sanitizeInput(formData.subject),
+        message: sanitizeInput(formData.message),
+      };
+
+      // Check for suspicious content
+      const allText = Object.values(sanitizedData).join(" ");
+      if (containsSuspiciousContent(allText)) {
+        throw new Error(
+          "Suspicious content detected. Please remove any scripts or HTML tags."
+        );
+      }
+
+      // Validate email again with enhanced validation
+      if (!isValidEmail(sanitizedData.email)) {
+        throw new Error("Invalid email address format.");
+      }
+
       // Send email using EmailJS
       const templateParams = {
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
+        name: sanitizedData.name,
+        email: sanitizedData.email,
+        subject: sanitizedData.subject,
+        message: sanitizedData.message,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent.substring(0, 100), // Truncate for security
       };
 
       // Using your service ID and template ID
@@ -328,6 +399,24 @@ const Contact = () => {
                   ref={formRef}
                   noValidate
                 >
+                  {/* Honeypot field for spam protection */}
+                  <HoneypotField onChange={handleHoneypotChange} />
+
+                  {/* Rate limiting warning */}
+                  {isBlocked && (
+                    <div
+                      className={`${styles.submitMessage} ${styles.warning}`}
+                    >
+                      <span className={styles.statusIcon}>
+                        <FaShieldAlt />
+                      </span>
+                      <p>
+                        Rate limit exceeded. Please wait {remainingTime}{" "}
+                        minute(s) before trying again.
+                      </p>
+                    </div>
+                  )}
+
                   <div className={styles.formRow}>
                     <div
                       className={`${styles.formGroup} ${
