@@ -23,7 +23,9 @@ const createLazyComponent = (importFunc, componentName) => {
 
         // If it's a 404 error on a chunk, it might be a stale cache issue
         if (
-          error.message.includes("Failed to fetch dynamically imported module") ||
+          error.message.includes(
+            "Failed to fetch dynamically imported module"
+          ) ||
           error.message.includes("ChunkLoadError") ||
           error.message.includes("Loading chunk")
         ) {
@@ -32,13 +34,13 @@ const createLazyComponent = (importFunc, componentName) => {
           );
 
           // Clear service worker cache
-          if ('caches' in window) {
+          if ("caches" in window) {
             try {
               const cacheNames = await caches.keys();
-              await Promise.all(cacheNames.map(name => caches.delete(name)));
-              console.log('Service worker cache cleared');
+              await Promise.all(cacheNames.map((name) => caches.delete(name)));
+              console.log("Service worker cache cleared");
             } catch (cacheError) {
-              console.warn('Failed to clear cache:', cacheError);
+              console.warn("Failed to clear cache:", cacheError);
             }
           }
 
@@ -46,8 +48,9 @@ const createLazyComponent = (importFunc, componentName) => {
           if (attempt === retries) {
             console.log("Attempting page reload to fetch updated chunks...");
             const currentUrl = window.location.href;
-            const separator = currentUrl.includes('?') ? '&' : '?';
-            window.location.href = currentUrl + separator + '_reload=' + Date.now();
+            const separator = currentUrl.includes("?") ? "&" : "?";
+            window.location.href =
+              currentUrl + separator + "_reload=" + Date.now();
             return;
           }
         }
@@ -62,34 +65,38 @@ const createLazyComponent = (importFunc, componentName) => {
           });
         } else {
           // Return a fallback component on final failure
-          console.error(`Failed to load ${componentName} after ${retries} attempts`);
+          console.error(
+            `Failed to load ${componentName} after ${retries} attempts`
+          );
           return {
             default: () => (
-              <div style={{ 
-                padding: '2rem', 
-                textAlign: 'center',
-                backgroundColor: 'var(--color-error-bg, #fee)',
-                border: '1px solid var(--color-error, #d00)',
-                borderRadius: '8px',
-                margin: '1rem'
-              }}>
+              <div
+                style={{
+                  padding: "2rem",
+                  textAlign: "center",
+                  backgroundColor: "var(--color-error-bg, #fee)",
+                  border: "1px solid var(--color-error, #d00)",
+                  borderRadius: "8px",
+                  margin: "1rem",
+                }}
+              >
                 <h2>Failed to Load Component</h2>
                 <p>There was an error loading the {componentName} component.</p>
-                <button 
+                <button
                   onClick={() => window.location.reload()}
                   style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: 'var(--color-primary, #007bff)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "var(--color-primary, #007bff)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
                   }}
                 >
                   Reload Page
                 </button>
               </div>
-            )
+            ),
           };
         }
       }

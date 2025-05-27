@@ -24,7 +24,7 @@ export default defineConfig({
       // Add error handling for chunk loading
       onwarn(warning, warn) {
         // Suppress certain warnings that don't affect functionality
-        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
+        if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
         warn(warning);
       },
     },

@@ -120,16 +120,18 @@ self.addEventListener("fetch", (event) => {
 
         // Don't cache JavaScript chunks to avoid stale cache issues with Vite builds
         // JavaScript files with hashes should always be fetched fresh
-        const isJSChunk = event.request.url.includes('/assets/') && 
-                         (event.request.url.endsWith('.js') || event.request.url.endsWith('.mjs'));
-        
+        const isJSChunk =
+          event.request.url.includes("/assets/") &&
+          (event.request.url.endsWith(".js") ||
+            event.request.url.endsWith(".mjs"));
+
         // Don't cache if not a valid response or if it's not a GET request
         if (
           !response ||
           response.status !== 200 ||
           event.request.method !== "GET" ||
           !response.headers.get("content-type") ||
-          isJSChunk  // Don't cache JS chunks
+          isJSChunk // Don't cache JS chunks
         ) {
           return response;
         }

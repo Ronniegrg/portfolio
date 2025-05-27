@@ -16,18 +16,18 @@ window.addEventListener("error", (event) => {
     event.message.includes("ChunkLoadError")
   ) {
     console.warn("Chunk loading failed, clearing cache and reloading page...");
-    
+
     // Clear service worker cache if available
-    if ('caches' in window) {
-      caches.keys().then(function(names) {
+    if ("caches" in window) {
+      caches.keys().then(function (names) {
         for (let name of names) caches.delete(name);
       });
     }
-    
+
     // Clear browser cache by adding a timestamp to reload
     const currentUrl = window.location.href;
-    const separator = currentUrl.includes('?') ? '&' : '?';
-    window.location.href = currentUrl + separator + '_reload=' + Date.now();
+    const separator = currentUrl.includes("?") ? "&" : "?";
+    window.location.href = currentUrl + separator + "_reload=" + Date.now();
   }
 });
 
@@ -37,23 +37,25 @@ window.addEventListener("unhandledrejection", (event) => {
     event.reason &&
     event.reason.message &&
     (event.reason.message.includes("Loading chunk") ||
-      event.reason.message.includes("Failed to fetch dynamically imported module") ||
+      event.reason.message.includes(
+        "Failed to fetch dynamically imported module"
+      ) ||
       event.reason.message.includes("ChunkLoadError"))
   ) {
     console.warn("Dynamic import failed, clearing cache and reloading page...");
     event.preventDefault(); // Prevent the error from being logged
-    
+
     // Clear service worker cache if available
-    if ('caches' in window) {
-      caches.keys().then(function(names) {
+    if ("caches" in window) {
+      caches.keys().then(function (names) {
         for (let name of names) caches.delete(name);
       });
     }
-    
+
     // Clear browser cache by adding a timestamp to reload
     const currentUrl = window.location.href;
-    const separator = currentUrl.includes('?') ? '&' : '?';
-    window.location.href = currentUrl + separator + '_reload=' + Date.now();
+    const separator = currentUrl.includes("?") ? "&" : "?";
+    window.location.href = currentUrl + separator + "_reload=" + Date.now();
   }
 });
 
