@@ -33,8 +33,8 @@ import educationData from "../data/education.json";
 import experiencesData from "../data/experiences.json";
 import skillsData from "../data/skills.json";
 
-// Use the CDN worker file that matches our pdfjs-dist version (4.8.69)
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs`;
+// Use the CDN worker file that matches our pdfjs-dist version (5.2.133)
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.2.133/build/pdf.worker.min.mjs`;
 
 const logoMap = {
   omnistudioDeveloper,
