@@ -10,14 +10,39 @@ import AccessibilityManager from "./components/AccessibilityManager";
 
 // Register service worker for PWA capabilities (only in production)
 if ("serviceWorker" in navigator && import.meta.env.PROD) {
-  window.addEventListener("load", () => {
+  window.addEventListener("load", async () => {
+    let storageAccessGranted = false;
+
+    // Try to request storage access before registering service worker
+    try {
+      if ("storage" in navigator && "requestStorageAccess" in document) {
+        await document.requestStorageAccess();
+        storageAccessGranted = true;
+        console.log("Storage access granted for service worker");
+      }
+    } catch (error) {
+      console.warn(
+        "Storage access request failed (tracking prevention may be active):",
+        error.message
+      );
+      // Continue with service worker registration even if storage access fails
+    }
+
     const swPath = "/portfolio/service-worker.js";
 
     navigator.serviceWorker
       .register(swPath)
       .then((registration) => {
+        console.log("Service worker registered successfully");
+
+        if (!storageAccessGranted) {
+          console.log(
+            "Service worker running in fallback mode (no caching) due to tracking prevention"
+          );
+        }
+
         if (import.meta.env.DEV) {
-          console.log("Service worker registered: ", registration);
+          console.log("Service worker registration: ", registration);
         }
       })
       .catch((error) => {

@@ -1,6 +1,12 @@
 // Service Worker for Rouni Gorgees Portfolio
 console.log("Service Worker: Script loaded");
 
+// Detect if we're in a tracking prevention environment
+const isTrackingPreventionActive = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+  return userAgent.includes("safari") || userAgent.includes("edge");
+};
+
 const CACHE_NAME = "rg-portfolio-v2";
 // Base path from vite.config.js
 const BASE_PATH = "/portfolio/";
@@ -15,89 +21,161 @@ const urlsToCache = [
 ];
 
 console.log("Service Worker: URLs to cache:", urlsToCache);
+console.log(
+  "Service Worker: Tracking prevention detected:",
+  isTrackingPreventionActive()
+);
+
+// Check if storage is available (handles tracking prevention)
+let storageAvailable = null; // Cache the result
+
+async function isStorageAvailable() {
+  if (storageAvailable !== null) {
+    return storageAvailable;
+  }
+
+  try {
+    // Test basic cache access
+    const _testCache = await caches.open("storage-test");
+    await caches.delete("storage-test");
+    storageAvailable = true;
+    console.log("Service Worker: Storage is available");
+    return true;
+  } catch (error) {
+    storageAvailable = false;
+    console.warn(
+      "Service Worker: Storage access blocked by browser (tracking prevention):",
+      error.message
+    );
+    console.log("Service Worker: Running in fallback mode without caching");
+    return false;
+  }
+}
 
 // Install service worker
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      // Cache resources individually to handle failures gracefully
-      const cachePromises = urlsToCache.map(async (url) => {
-        try {
-          const response = await fetch(url);
-          if (response.ok) {
-            await cache.put(url, response);
-            console.log(`Successfully cached: ${url}`);
-          } else {
-            console.warn(
-              `Failed to fetch ${url}: ${response.status} ${response.statusText}`
-            );
-          }
-        } catch (error) {
-          console.warn(`Error caching ${url}:`, error.message);
-        }
-      });
+    (async () => {
+      const storageAvailable = await isStorageAvailable();
 
-      await Promise.allSettled(cachePromises);
-      console.log("Service worker installation completed");
-    })
+      if (!storageAvailable) {
+        console.warn("Storage not available, skipping cache operations");
+        return;
+      }
+
+      try {
+        const cache = await caches.open(CACHE_NAME);
+
+        // Cache resources individually to handle failures gracefully
+        const cachePromises = urlsToCache.map(async (url) => {
+          try {
+            const response = await fetch(url);
+            if (response.ok) {
+              await cache.put(url, response);
+              console.log(`Successfully cached: ${url}`);
+            } else {
+              console.warn(
+                `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+              );
+            }
+          } catch (error) {
+            console.warn(`Error caching ${url}:`, error.message);
+          }
+        });
+
+        await Promise.allSettled(cachePromises);
+        console.log("Service worker installation completed");
+      } catch (error) {
+        console.warn("Cache operations failed:", error.message);
+      }
+    })()
   );
 });
 
 // Fetch from cache first, then network
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Cache hit - return response
-      if (response) {
-        return response;
+    (async () => {
+      const storageReady = await isStorageAvailable();
+
+      // Try to get from cache first (only if storage is available)
+      if (storageReady) {
+        try {
+          const cachedResponse = await caches.match(event.request);
+          if (cachedResponse) {
+            console.log(
+              "Service Worker: Serving from cache:",
+              event.request.url
+            );
+            return cachedResponse;
+          }
+        } catch (error) {
+          console.warn("Service Worker: Cache access failed:", error.message);
+        }
       }
 
       // Fetch from network
-      return fetch(event.request)
-        .then((response) => {
-          // Don't cache if not a valid response or if it's not a GET request
-          if (
-            !response ||
-            response.status !== 200 ||
-            event.request.method !== "GET" ||
-            !response.headers.get("content-type")
-          ) {
-            return response;
-          }
+      try {
+        const response = await fetch(event.request);
 
-          // Clone the response
-          const responseToCache = response.clone();
-
-          // Cache the response asynchronously
-          caches
-            .open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache).catch((error) => {
-                console.warn(
-                  "Failed to cache resource:",
-                  event.request.url,
-                  error
-                );
-              });
-            })
-            .catch((error) => {
-              console.warn("Failed to open cache:", error);
-            });
-
+        // Don't cache if not a valid response or if it's not a GET request
+        if (
+          !response ||
+          response.status !== 200 ||
+          event.request.method !== "GET" ||
+          !response.headers.get("content-type")
+        ) {
           return response;
-        })
-        .catch((error) => {
-          // Network request failed
-          console.warn("Network request failed:", event.request.url, error);
-          // Return a generic offline response for navigation requests
-          if (event.request.mode === "navigate") {
-            return caches.match(BASE_PATH).then((cachedResponse) => {
-              return cachedResponse || new Response("Offline", { status: 503 });
+        }
+
+        // Try to cache the response only if storage is available
+        if (storageReady) {
+          try {
+            const responseToCache = response.clone();
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(event.request, responseToCache);
+            console.log("Service Worker: Cached resource:", event.request.url);
+          } catch (error) {
+            console.warn(
+              "Service Worker: Failed to cache resource:",
+              event.request.url,
+              error.message
+            );
+          }
+        }
+
+        return response;
+      } catch (error) {
+        // Network request failed
+        console.warn(
+          "Service Worker: Network request failed:",
+          event.request.url,
+          error.message
+        );
+
+        // Try to return a cached fallback for navigation requests (only if storage is available)
+        if (event.request.mode === "navigate" && storageReady) {
+          try {
+            const cachedResponse = await caches.match(BASE_PATH);
+            return (
+              cachedResponse ||
+              new Response("Offline - Please check your connection", {
+                status: 503,
+                headers: { "Content-Type": "text/plain" },
+              })
+            );
+          } catch {
+            return new Response("Offline - Please check your connection", {
+              status: 503,
+              headers: { "Content-Type": "text/plain" },
             });
           }
-          throw error;
-        });
-    })
+        }
+
+        // For non-navigation requests, just let the error propagate
+        throw error;
+      }
+    })()
   );
 });
 
@@ -105,14 +183,40 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener("activate", (event) => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    (async () => {
+      const storageAvailable = await isStorageAvailable();
+
+      if (!storageAvailable) {
+        console.warn("Storage not available, skipping cache cleanup");
+        return;
+      }
+
+      try {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheWhitelist.indexOf(cacheName) === -1) {
+              return caches.delete(cacheName);
+            }
+          })
+        );
+        console.log("Cache cleanup completed");
+      } catch (error) {
+        console.warn("Cache cleanup failed:", error.message);
+      }
+    })()
   );
+});
+
+// Handle messages from the main thread
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+
+  if (event.data && event.data.type === "CHECK_STORAGE") {
+    event.ports[0].postMessage({
+      storageAvailable: storageAvailable,
+    });
+  }
 });
