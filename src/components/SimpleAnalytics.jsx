@@ -31,10 +31,7 @@ const SimpleAnalytics = () => {
 
         localStorage.setItem("rg_analytics", JSON.stringify(analytics));
 
-        // Log in development mode
-        if (import.meta.env.DEV) {
-          console.log("📊 Page view:", pageData);
-        }
+        // Page view tracked successfully
       } catch (error) {
         console.error("Analytics error:", error);
       }

@@ -69,7 +69,6 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
       if ("storage" in navigator && "requestStorageAccess" in document) {
         await document.requestStorageAccess();
         storageAccessGranted = true;
-        console.log("Storage access granted for service worker");
       }
     } catch (error) {
       console.warn(
@@ -83,18 +82,14 @@ if ("serviceWorker" in navigator && import.meta.env.PROD) {
 
     navigator.serviceWorker
       .register(swPath)
-      .then((registration) => {
-        console.log("Service worker registered successfully");
+      .then(() => {
+        // Service worker registered successfully
 
         if (!storageAccessGranted) {
-          console.log(
-            "Service worker running in fallback mode (no caching) due to tracking prevention"
-          );
+          // Service worker running in fallback mode (no caching) due to tracking prevention
         }
 
-        if (import.meta.env.DEV) {
-          console.log("Service worker registration: ", registration);
-        }
+        // Service worker registration details available in development mode
       })
       .catch((error) => {
         console.error("Service worker registration failed: ", error);

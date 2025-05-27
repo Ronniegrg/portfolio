@@ -19,7 +19,7 @@ const Analytics = () => {
 
     // In development just log to console
     if (import.meta.env.DEV) {
-      console.log("Page view:", page);
+      // Page view would be logged here in development
       return;
     }
 

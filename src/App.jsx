@@ -38,7 +38,6 @@ const createLazyComponent = (importFunc, componentName) => {
             try {
               const cacheNames = await caches.keys();
               await Promise.all(cacheNames.map((name) => caches.delete(name)));
-              console.log("Service worker cache cleared");
             } catch (cacheError) {
               console.warn("Failed to clear cache:", cacheError);
             }
@@ -46,7 +45,6 @@ const createLazyComponent = (importFunc, componentName) => {
 
           // For the last attempt, try to reload the page to get fresh chunks
           if (attempt === retries) {
-            console.log("Attempting page reload to fetch updated chunks...");
             const currentUrl = window.location.href;
             const separator = currentUrl.includes("?") ? "&" : "?";
             window.location.href =
@@ -135,7 +133,7 @@ function App() {
     ) {
       // Only log every few seconds to avoid spam
       const timeoutId = setTimeout(() => {
-        console.log("Performance metrics:", metrics);
+        // Performance metrics would be logged here in development
       }, 1000);
 
       return () => clearTimeout(timeoutId);

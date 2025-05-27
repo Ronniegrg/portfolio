@@ -1,11 +1,4 @@
 // Service Worker for Rouni Gorgees Portfolio
-console.log("Service Worker: Script loaded");
-
-// Detect if we're in a tracking prevention environment
-const isTrackingPreventionActive = () => {
-  const userAgent = navigator.userAgent.toLowerCase();
-  return userAgent.includes("safari") || userAgent.includes("edge");
-};
 
 const CACHE_NAME = "rg-portfolio-v3"; // Increment version to invalidate old cache
 // Base path from vite.config.js
@@ -21,11 +14,7 @@ const urlsToCache = [
   // since Vite generates hashed filenames that we can't predict at build time
 ];
 
-console.log("Service Worker: URLs to cache:", urlsToCache);
-console.log(
-  "Service Worker: Tracking prevention detected:",
-  isTrackingPreventionActive()
-);
+// URLs to cache and tracking prevention status determined
 
 // Check if storage is available (handles tracking prevention)
 let storageAvailable = null; // Cache the result
@@ -40,7 +29,7 @@ async function isStorageAvailable() {
     const _testCache = await caches.open("storage-test");
     await caches.delete("storage-test");
     storageAvailable = true;
-    console.log("Service Worker: Storage is available");
+    // Storage is available
     return true;
   } catch (error) {
     storageAvailable = false;
@@ -48,7 +37,7 @@ async function isStorageAvailable() {
       "Service Worker: Storage access blocked by browser (tracking prevention):",
       error.message
     );
-    console.log("Service Worker: Running in fallback mode without caching");
+    // Running in fallback mode without caching
     return false;
   }
 }
@@ -73,7 +62,7 @@ self.addEventListener("install", (event) => {
             const response = await fetch(url);
             if (response.ok) {
               await cache.put(url, response);
-              console.log(`Successfully cached: ${url}`);
+              // Successfully cached resource
             } else {
               console.warn(
                 `Failed to fetch ${url}: ${response.status} ${response.statusText}`
@@ -85,7 +74,7 @@ self.addEventListener("install", (event) => {
         });
 
         await Promise.allSettled(cachePromises);
-        console.log("Service worker installation completed");
+        // Service worker installation completed
       } catch (error) {
         console.warn("Cache operations failed:", error.message);
       }
@@ -104,10 +93,7 @@ self.addEventListener("fetch", (event) => {
         try {
           const cachedResponse = await caches.match(event.request);
           if (cachedResponse) {
-            console.log(
-              "Service Worker: Serving from cache:",
-              event.request.url
-            );
+            // Serving from cache
             return cachedResponse;
           }
         } catch (error) {
@@ -143,7 +129,7 @@ self.addEventListener("fetch", (event) => {
             const responseToCache = response.clone();
             const cache = await caches.open(CACHE_NAME);
             await cache.put(event.request, responseToCache);
-            console.log("Service Worker: Cached resource:", event.request.url);
+            // Cached resource successfully
           } catch (error) {
             console.warn(
               "Service Worker: Failed to cache resource:",
@@ -209,7 +195,7 @@ self.addEventListener("activate", (event) => {
             }
           })
         );
-        console.log("Cache cleanup completed");
+        // Cache cleanup completed
       } catch (error) {
         console.warn("Cache cleanup failed:", error.message);
       }
