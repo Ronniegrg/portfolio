@@ -408,7 +408,18 @@ const About = () => {
 
                         <div className={styles.experienceInfo}>
                           <h3 className={styles.jobTitle}>{exp.title}</h3>
-                          <p className={styles.companyName}>{exp.company}</p>
+                          {exp.companyLink ? (
+                            <a
+                              href={exp.companyLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.companyName}
+                            >
+                              {exp.company}
+                            </a>
+                          ) : (
+                            <p className={styles.companyName}>{exp.company}</p>
+                          )}
                           <div className={styles.experienceMeta}>
                             <span className={styles.metaItem}>
                               <FaMapMarkerAlt className={styles.metaIcon} />
