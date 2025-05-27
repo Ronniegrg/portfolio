@@ -1,6 +1,6 @@
 // Service Worker for Rouni Gorgees Portfolio
 
-const CACHE_NAME = "rg-portfolio-v3"; // Increment version to invalidate old cache
+const CACHE_NAME = "rg-portfolio-v4"; // Increment version to invalidate old cache
 // Base path from vite.config.js
 const BASE_PATH = "/portfolio/";
 const urlsToCache = [
@@ -87,6 +87,12 @@ self.addEventListener("install", (event) => {
 
 // Fetch from cache first, then network
 self.addEventListener("fetch", (event) => {
+  // Skip handling requests with unsupported schemes
+  const url = new URL(event.request.url);
+  if (!["http:", "https:"].includes(url.protocol)) {
+    return; // Let the browser handle chrome-extension:// and other schemes natively
+  }
+
   event.respondWith(
     (async () => {
       const storageReady = await isStorageAvailable();
@@ -115,13 +121,18 @@ self.addEventListener("fetch", (event) => {
           (event.request.url.endsWith(".js") ||
             event.request.url.endsWith(".mjs"));
 
+        // Check for unsupported URL schemes
+        const url = new URL(event.request.url);
+        const isUnsupportedScheme = !["http:", "https:"].includes(url.protocol);
+
         // Don't cache if not a valid response or if it's not a GET request
         if (
           !response ||
           response.status !== 200 ||
           event.request.method !== "GET" ||
           !response.headers.get("content-type") ||
-          isJSChunk // Don't cache JS chunks
+          isJSChunk || // Don't cache JS chunks
+          isUnsupportedScheme // Don't cache chrome-extension:// or other unsupported schemes
         ) {
           return response;
         }
