@@ -21,7 +21,10 @@
   margin-bottom: var(--spacing-2xl);
   opacity: 0;
   transform: translateY(20px);
-  animatio.success {
+  animation: slideInUp 0.6s ease forwards;
+}
+
+.success {
   background-color: rgba(16, 185, 129, 0.1);
   color: #10b981;
   border: 1px solid rgba(16, 185, 129, 0.2);
@@ -37,8 +40,6 @@
   background-color: rgba(245, 158, 11, 0.1);
   color: #f59e0b;
   border: 1px solid rgba(245, 158, 11, 0.2);
-} 0.6s ease-out forwards;
-  animation-delay: 0.2s;
 }
 
 .container {
@@ -477,7 +478,7 @@
 .warning {
   background-color: rgba(245, 158, 11, 0.1);
   color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .statusIcon {
@@ -544,6 +545,17 @@
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

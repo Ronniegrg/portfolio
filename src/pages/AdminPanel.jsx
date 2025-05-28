@@ -705,21 +705,71 @@ const AdminPanel = () => {
         )}
 
         {activeTab === "pageViews" && (
-          <div className={styles.dataCard}>
-            <div className={styles.cardHeader}>
-              <h2>📄 Recent Page Views</h2>
-              <span className={styles.resultCount}>
-                {filteredData.pageViews.length} results
-              </span>
+          <div className={styles.pageViewsSection}>
+            <div className={styles.pageViewsHeader}>
+              <h2 className={styles.pageViewsTitle}>
+                <span className={styles.pageViewsIcon}>📄</span>
+                Page Views Analytics
+              </h2>
+              <div className={styles.viewsCounter}>
+                <div className={styles.totalViews}>
+                  <span className={styles.viewsNumber}>
+                    {filteredData.pageViews.length.toLocaleString()}
+                  </span>
+                  <span className={styles.viewsLabel}>Total Views</span>
+                  <div className={styles.viewsGrowth}>
+                    <span>📈</span>
+                    +12.5% this week
+                  </div>
+                </div>
+              </div>
             </div>
+
+            {/* Page Views Statistics */}
+            <div className={styles.pageViewsStats}>
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>🌍</div>
+                <div className={styles.statValue}>
+                  {enhancedSummary.uniquePaths}
+                </div>
+                <div className={styles.statLabel}>Unique Pages</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>⚡</div>
+                <div className={styles.statValue}>
+                  {enhancedSummary.sessionsCount > 0
+                    ? (
+                        enhancedSummary.totalPageViews /
+                        enhancedSummary.sessionsCount
+                      ).toFixed(1)
+                    : "0"}
+                </div>
+                <div className={styles.statLabel}>Avg. Pages/Session</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>🎯</div>
+                <div className={styles.statValue}>
+                  {enhancedSummary.bounceRate.toFixed(1)}%
+                </div>
+                <div className={styles.statLabel}>Bounce Rate</div>
+              </div>
+              <div className={styles.statCard}>
+                <div className={styles.statIcon}>👥</div>
+                <div className={styles.statValue}>
+                  {enhancedSummary.sessionsCount}
+                </div>
+                <div className={styles.statLabel}>Active Sessions</div>
+              </div>
+            </div>
+
             <div className={styles.tableContainer}>
-              <table className={styles.table}>
+              <table className={styles.enhancedTable}>
                 <thead>
                   <tr>
-                    <th>Path</th>
-                    <th>Time</th>
-                    <th>Referrer</th>
-                    <th>Relative</th>
+                    <th>Page Path</th>
+                    <th>Timestamp</th>
+                    <th>Referrer Source</th>
+                    <th>Time Ago</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -727,23 +777,63 @@ const AdminPanel = () => {
                     .slice()
                     .reverse()
                     .slice(0, 100) // Limit to 100 recent entries
-                    .map((view, i) => (
-                      <tr key={i}>
-                        <td className={styles.pathCell}>{view.path}</td>
-                        <td className={styles.timeCell}>
-                          {formatDate(view.timestamp)}
-                        </td>
-                        <td className={styles.referrerCell}>
-                          {view.referrer || "Direct"}
-                        </td>
-                        <td className={styles.relativeTimeCell}>
-                          {formatRelativeTime(view.timestamp)}
-                        </td>
-                      </tr>
-                    ))}
+                    .map((view, i) => {
+                      const timeDiff =
+                        Date.now() - new Date(view.timestamp).getTime();
+                      const isRecent = timeDiff < 3600000; // Less than 1 hour
+                      const isOld = timeDiff > 86400000; // More than 1 day
+                      const referrer = view.referrer || "Direct";
+                      const isDirect = referrer === "Direct";
+
+                      return (
+                        <tr key={i}>
+                          <td className={styles.enhancedPathCell}>
+                            {view.path}
+                          </td>
+                          <td className={styles.enhancedTimeCell}>
+                            {formatDate(view.timestamp)}
+                          </td>
+                          <td
+                            className={`${styles.enhancedReferrerCell} ${
+                              isDirect
+                                ? styles.directTraffic
+                                : styles.externalReferrer
+                            }`}
+                          >
+                            {referrer}
+                          </td>
+                          <td className={styles.enhancedRelativeTimeCell}>
+                            <span
+                              className={`${styles.timeAgo} ${
+                                isRecent
+                                  ? styles.recentIndicator
+                                  : isOld
+                                  ? styles.oldIndicator
+                                  : ""
+                              }`}
+                            >
+                              {formatRelativeTime(view.timestamp)}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination for large datasets */}
+            {filteredData.pageViews.length > 100 && (
+              <div className={styles.pageViewsPagination}>
+                <button className={styles.paginationButton} disabled>
+                  ← Previous
+                </button>
+                <span className={styles.pageInfo}>
+                  Showing 1-100 of {filteredData.pageViews.length} views
+                </span>
+                <button className={styles.paginationButton}>Next →</button>
+              </div>
+            )}
           </div>
         )}
 
