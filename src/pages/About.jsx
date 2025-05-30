@@ -36,7 +36,7 @@ import skillsData from "../data/skills.json";
 // Configure PDF.js worker for both development and production
 if (import.meta.env.PROD) {
   // Production: GitHub Pages - try multiple fallbacks
-  pdfjs.GlobalWorkerOptions.workerSrc = '/portfolio/pdfjs/pdf.worker.min.js';
+  pdfjs.GlobalWorkerOptions.workerSrc = "/portfolio/pdfjs/pdf.worker.min.js";
 } else {
   // Development: Try to use the worker from node_modules
   pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
@@ -505,27 +505,37 @@ const About = () => {
         >
           {" "}
           {pdfModal.src && (
-            <div style={{ width: "100%", textAlign: "center" }}>              <Document
+            <div style={{ width: "100%", textAlign: "center" }}>
+              {" "}
+              <Document
                 file={pdfModal.src}
-                onLoadSuccess={({ numPages }) => setNumPages(numPages)}                onLoadError={(error) => {
+                onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                onLoadError={(error) => {
                   console.error("Error loading PDF:", error);
-                  
+
                   // Enhanced fallback mechanism
                   const currentWorker = pdfjs.GlobalWorkerOptions.workerSrc;
-                  
+
                   // Try different worker sources as fallbacks
                   if (import.meta.env.PROD) {
-                    if (currentWorker === '/portfolio/pdfjs/pdf.worker.min.js') {
+                    if (
+                      currentWorker === "/portfolio/pdfjs/pdf.worker.min.js"
+                    ) {
                       // Fallback 1: Try the root worker
-                      console.log("Trying fallback worker: /portfolio/pdf.worker.min.js");
-                      pdfjs.GlobalWorkerOptions.workerSrc = '/portfolio/pdf.worker.min.js';
-                    } else if (currentWorker === '/portfolio/pdf.worker.min.js') {
+                      console.log(
+                        "Trying fallback worker: /portfolio/pdf.worker.min.js"
+                      );
+                      pdfjs.GlobalWorkerOptions.workerSrc =
+                        "/portfolio/pdf.worker.min.js";
+                    } else if (
+                      currentWorker === "/portfolio/pdf.worker.min.js"
+                    ) {
                       // Fallback 2: Try CDN worker
                       console.log("Trying CDN worker");
                       pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
                     }
                   }
-                  
+
                   // Try alternative URL if first attempt fails
                   if (
                     !pdfModal.src.startsWith("http") &&
