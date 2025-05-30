@@ -228,7 +228,6 @@ const About = () => {
                             <p className={styles.educationDescription}>
                               {edu.description}
                             </p>
-
                             {edu.achievements.length > 0 && (
                               <div className={styles.achievementsSection}>
                                 <h4 className={styles.detailsTitle}>
@@ -248,7 +247,6 @@ const About = () => {
                                 </ul>
                               </div>
                             )}
-
                             <div className={styles.coursesSection}>
                               <h4 className={styles.detailsTitle}>
                                 Key Courses
@@ -263,8 +261,15 @@ const About = () => {
                                   </span>
                                 ))}
                               </div>
-                            </div>                            <div style={{ marginTop: "1rem" }}>
-                              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                            </div>{" "}
+                            <div style={{ marginTop: "1rem" }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  gap: "0.5rem",
+                                  flexWrap: "wrap",
+                                }}
+                              >
                                 <button
                                   className={styles.viewPdfButton}
                                   onClick={() =>
@@ -287,7 +292,9 @@ const About = () => {
                                   View Certificate
                                 </button>
                                 <a
-                                  href={`https://ronniegrg.github.io/portfolio/${pdfFiles[edu.id]}`}
+                                  href={`https://ronniegrg.github.io/portfolio/${
+                                    pdfFiles[edu.id]
+                                  }`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   style={{
