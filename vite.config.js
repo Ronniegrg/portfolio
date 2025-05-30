@@ -6,12 +6,12 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 export default defineConfig({
   base: "/portfolio/",
   plugins: [
-    react(),
-    viteStaticCopy({
+    react(),    viteStaticCopy({
       targets: [
         {
           src: "node_modules/pdfjs-dist/build/pdf.worker.min.mjs",
-          dest: "assets",
+          dest: "",
+          rename: "pdf.worker.min.js",
         },
       ],
     }),
