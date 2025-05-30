@@ -34,7 +34,7 @@ import experiencesData from "../data/experiences.json";
 import skillsData from "../data/skills.json";
 
 // Configure PDF.js worker for both development and production
-pdfjs.GlobalWorkerOptions.workerSrc = "/portfolio/pdf.worker.min.js";
+pdfjs.GlobalWorkerOptions.workerSrc = false;
 
 const logoMap = {
   omnistudioDeveloper,
