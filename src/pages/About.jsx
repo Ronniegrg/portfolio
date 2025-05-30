@@ -35,11 +35,11 @@ import skillsData from "../data/skills.json";
 
 // Configure PDF.js worker for both development and production
 if (import.meta.env.PROD) {
-  // Production: GitHub Pages - try multiple fallbacks
-  pdfjs.GlobalWorkerOptions.workerSrc = "/portfolio/pdfjs/pdf.worker.min.js";
+  // Production: Use local worker file
+  pdfjs.GlobalWorkerOptions.workerSrc = `/portfolio/pdfjs/pdf.worker.min.js`;
 } else {
-  // Development: Try to use the worker from node_modules
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+  // Development: Use local worker file from public directory
+  pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.js`;
 }
 
 const logoMap = {
@@ -281,9 +281,7 @@ const About = () => {
                                   onClick={() =>
                                     setPdfModal({
                                       open: true,
-                                      src: `https://ronniegrg.github.io/portfolio/${
-                                        pdfFiles[edu.id]
-                                      }`,
+                                      src: `${import.meta.env.PROD ? "/portfolio/" : "/"}${pdfFiles[edu.id]}`,
                                     })
                                   }
                                   style={{
@@ -300,12 +298,7 @@ const About = () => {
                                   View Certificate
                                 </button>
                                 <a
-                                  href={
-                                    pdfModal.src.startsWith("http") ||
-                                    pdfModal.src.startsWith("/portfolio/")
-                                      ? pdfModal.src
-                                      : `https://ronniegrg.github.io/portfolio/${pdfModal.src}`
-                                  }
+                                  href={`${import.meta.env.PROD ? "/portfolio/" : "/"}${pdfFiles[edu.id]}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   style={{
@@ -527,17 +520,22 @@ const About = () => {
                       );
                       pdfjs.GlobalWorkerOptions.workerSrc =
                         "/portfolio/pdf.worker.min.js";
-                    } else if (
-                      currentWorker === "/portfolio/pdf.worker.min.js"
-                    ) {
-                      // Fallback 2: Try CDN worker
-                      console.log("Trying CDN worker");
-                      pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+                    } else {
+                      // Fallback 2: Try direct path without /portfolio prefix
+                      console.log("Trying direct path worker");
+                      pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.js";
+                    }
+                  } else {
+                    // In development, try alternative paths
+                    if (currentWorker === "/pdfjs/pdf.worker.min.js") {
+                      console.log("Trying direct path worker");
+                      pdfjs.GlobalWorkerOptions.workerSrc = "pdf.worker.min.js";
                     }
                   }
 
                   // Try alternative URL if first attempt fails
                   if (
+                    pdfModal.src &&
                     !pdfModal.src.startsWith("http") &&
                     !pdfModal.src.startsWith("/portfolio/")
                   ) {
@@ -553,10 +551,12 @@ const About = () => {
                     <p>Failed to load PDF. You can try:</p>
                     <a
                       href={
-                        pdfModal.src.startsWith("http") ||
-                        pdfModal.src.startsWith("/portfolio/")
-                          ? pdfModal.src
-                          : `https://ronniegrg.github.io/portfolio/${pdfModal.src}`
+                        pdfModal.src
+                          ? pdfModal.src.startsWith("http") ||
+                            pdfModal.src.startsWith("/portfolio/")
+                            ? pdfModal.src
+                            : `https://ronniegrg.github.io/portfolio/${pdfModal.src}`
+                          : "#"
                       }
                       target="_blank"
                       rel="noopener noreferrer"
