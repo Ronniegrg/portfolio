@@ -275,7 +275,7 @@ const About = () => {
                                   onClick={() =>
                                     setPdfModal({
                                       open: true,
-                                      src: pdfFiles[edu.id],
+                                      src: `/portfolio/${pdfFiles[edu.id]}`,
                                     })
                                   }
                                   style={{
@@ -292,9 +292,12 @@ const About = () => {
                                   View Certificate
                                 </button>
                                 <a
-                                  href={`https://ronniegrg.github.io/portfolio/${
-                                    pdfFiles[edu.id]
-                                  }`}
+                                  href={
+                                    pdfModal.src.startsWith("http") ||
+                                    pdfModal.src.startsWith("/portfolio/")
+                                      ? pdfModal.src
+                                      : `/portfolio/${pdfModal.src}`
+                                  }
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   style={{
@@ -501,8 +504,11 @@ const About = () => {
                 onLoadError={(error) => {
                   console.error("Error loading PDF:", error);
                   // Try alternative URL if first attempt fails
-                  if (!pdfModal.src.startsWith("http")) {
-                    const fallbackUrl = `https://ronniegrg.github.io/portfolio/${pdfModal.src}`;
+                  if (
+                    !pdfModal.src.startsWith("http") &&
+                    !pdfModal.src.startsWith("/portfolio/")
+                  ) {
+                    const fallbackUrl = `/portfolio/${pdfModal.src}`;
                     setPdfModal({ open: true, src: fallbackUrl });
                   }
                 }}
@@ -512,9 +518,10 @@ const About = () => {
                     <p>Failed to load PDF. You can try:</p>
                     <a
                       href={
-                        pdfModal.src.startsWith("http")
+                        pdfModal.src.startsWith("http") ||
+                        pdfModal.src.startsWith("/portfolio/")
                           ? pdfModal.src
-                          : `https://ronniegrg.github.io/portfolio/${pdfModal.src}`
+                          : `/portfolio/${pdfModal.src}`
                       }
                       target="_blank"
                       rel="noopener noreferrer"
