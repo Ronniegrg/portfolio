@@ -275,7 +275,9 @@ const About = () => {
                                   onClick={() =>
                                     setPdfModal({
                                       open: true,
-                                      src: `/portfolio/${pdfFiles[edu.id]}`,
+                                      src: `https://ronniegrg.github.io/portfolio/${
+                                        pdfFiles[edu.id]
+                                      }`,
                                     })
                                   }
                                   style={{
@@ -296,7 +298,7 @@ const About = () => {
                                     pdfModal.src.startsWith("http") ||
                                     pdfModal.src.startsWith("/portfolio/")
                                       ? pdfModal.src
-                                      : `/portfolio/${pdfModal.src}`
+                                      : `https://ronniegrg.github.io/portfolio/${pdfModal.src}`
                                   }
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -508,7 +510,7 @@ const About = () => {
                     !pdfModal.src.startsWith("http") &&
                     !pdfModal.src.startsWith("/portfolio/")
                   ) {
-                    const fallbackUrl = `/portfolio/${pdfModal.src}`;
+                    const fallbackUrl = `https://ronniegrg.github.io/portfolio/${pdfModal.src}`;
                     setPdfModal({ open: true, src: fallbackUrl });
                   }
                 }}
@@ -521,7 +523,7 @@ const About = () => {
                         pdfModal.src.startsWith("http") ||
                         pdfModal.src.startsWith("/portfolio/")
                           ? pdfModal.src
-                          : `/portfolio/${pdfModal.src}`
+                          : `https://ronniegrg.github.io/portfolio/${pdfModal.src}`
                       }
                       target="_blank"
                       rel="noopener noreferrer"
