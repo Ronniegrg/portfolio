@@ -34,13 +34,7 @@ import experiencesData from "../data/experiences.json";
 import skillsData from "../data/skills.json";
 
 // Configure PDF.js worker for both development and production
-if (import.meta.env.DEV) {
-  // Development: use CDN
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.2.133/build/pdf.worker.min.mjs`;
-} else {
-  // Production: use local worker file
-  pdfjs.GlobalWorkerOptions.workerSrc = "/portfolio/assets/pdf.worker.min.mjs";
-}
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.2.133/build/pdf.worker.min.mjs`;
 
 const logoMap = {
   omnistudioDeveloper,
