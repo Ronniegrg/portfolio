@@ -33,8 +33,14 @@ import educationData from "../data/education.json";
 import experiencesData from "../data/experiences.json";
 import skillsData from "../data/skills.json";
 
-// Use the CDN worker file that matches our pdfjs-dist version (5.2.133)
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.2.133/build/pdf.worker.min.mjs`;
+// Configure PDF.js worker for both development and production
+if (import.meta.env.DEV) {
+  // Development: use CDN
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@5.2.133/build/pdf.worker.min.mjs`;
+} else {
+  // Production: use local worker file
+  pdfjs.GlobalWorkerOptions.workerSrc = "/portfolio/assets/pdf.worker.min.mjs";
+}
 
 const logoMap = {
   omnistudioDeveloper,
@@ -87,14 +93,13 @@ const About = () => {
   const toggleEducation = (id) => {
     setExpandedEducation(expandedEducation === id ? null : id);
   };
-
   // Map education id to PDF file names in public folder
   const pdfFiles = {
-    1: "/portfolio/Cert2863203_OmniStudioDeveloper_20230109.pdf",
-    2: "/portfolio/Cert2595678_PlatformDeveloperI_20220926.pdf",
-    3: "/portfolio/Cert2499846_Administrator_20220817.pdf",
-    4: "/portfolio/Web-Design.pdf",
-    5: "/portfolio/Computer-System-Technology-Software-Development.pdf",
+    1: "Cert2863203_OmniStudioDeveloper_20230109.pdf",
+    2: "Cert2595678_PlatformDeveloperI_20220926.pdf",
+    3: "Cert2499846_Administrator_20220817.pdf",
+    4: "Web-Design.pdf",
+    5: "Computer-System-Technology-Software-Development.pdf",
   };
 
   return (
@@ -264,30 +269,49 @@ const About = () => {
                                   </span>
                                 ))}
                               </div>
-                            </div>
-
-                            <div style={{ marginTop: "1rem" }}>
-                              <button
-                                className={styles.viewPdfButton}
-                                onClick={() =>
-                                  setPdfModal({
-                                    open: true,
-                                    src: pdfFiles[edu.id],
-                                  })
-                                }
-                                style={{
-                                  background: "var(--primary-color)",
-                                  color: "#fff",
-                                  borderRadius: "6px",
-                                  padding: "0.5rem 1.2rem",
-                                  border: "none",
-                                  fontWeight: 600,
-                                  cursor: "pointer",
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                View Certificate
-                              </button>
+                            </div>                            <div style={{ marginTop: "1rem" }}>
+                              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                                <button
+                                  className={styles.viewPdfButton}
+                                  onClick={() =>
+                                    setPdfModal({
+                                      open: true,
+                                      src: pdfFiles[edu.id],
+                                    })
+                                  }
+                                  style={{
+                                    background: "var(--primary-color)",
+                                    color: "#fff",
+                                    borderRadius: "6px",
+                                    padding: "0.5rem 1.2rem",
+                                    border: "none",
+                                    fontWeight: 600,
+                                    cursor: "pointer",
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  View Certificate
+                                </button>
+                                <a
+                                  href={`https://ronniegrg.github.io/portfolio/${pdfFiles[edu.id]}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    background: "transparent",
+                                    color: "var(--primary-color)",
+                                    borderRadius: "6px",
+                                    padding: "0.5rem 1.2rem",
+                                    border: "2px solid var(--primary-color)",
+                                    fontWeight: 600,
+                                    cursor: "pointer",
+                                    fontSize: "1rem",
+                                    textDecoration: "none",
+                                    display: "inline-block",
+                                  }}
+                                >
+                                  Open in New Tab
+                                </a>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -467,12 +491,41 @@ const About = () => {
             setPageNumber(1);
           }}
         >
+          {" "}
           {pdfModal.src && (
             <div style={{ width: "100%", textAlign: "center" }}>
               <Document
                 file={pdfModal.src}
                 onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+                onLoadError={(error) => {
+                  console.error("Error loading PDF:", error);
+                  // Try alternative URL if first attempt fails
+                  if (!pdfModal.src.startsWith("http")) {
+                    const fallbackUrl = `https://ronniegrg.github.io/portfolio/${pdfModal.src}`;
+                    setPdfModal({ open: true, src: fallbackUrl });
+                  }
+                }}
                 loading={<div>Loading PDF...</div>}
+                error={
+                  <div style={{ padding: "2rem", color: "var(--text-color)" }}>
+                    <p>Failed to load PDF. You can try:</p>
+                    <a
+                      href={
+                        pdfModal.src.startsWith("http")
+                          ? pdfModal.src
+                          : `https://ronniegrg.github.io/portfolio/${pdfModal.src}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "var(--primary-color)",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Open PDF in new tab
+                    </a>
+                  </div>
+                }
                 className="no-print"
               >
                 <Page pageNumber={pageNumber} width={600} />
