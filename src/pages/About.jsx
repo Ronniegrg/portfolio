@@ -32,14 +32,10 @@ import { Helmet } from "react-helmet-async";
 import educationData from "../data/education.json";
 import experiencesData from "../data/experiences.json";
 import skillsData from "../data/skills.json";
-import { configurePdfWorker, testPdfWorker } from "../utils/pdfWorker";
+import { pdfjs } from "react-pdf";
 
-// Configure PDF.js worker with error handling
-try {
-  configurePdfWorker();
-} catch (error) {
-  console.error("Failed to configure PDF worker:", error);
-}
+// Configure PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = "/portfolio/pdf.worker.min.js";
 
 const logoMap = {
   omnistudioDeveloper,
@@ -67,19 +63,6 @@ const About = () => {
   const [experiences, setExperiences] = useState([]);
   const [skillCategories, setSkillCategories] = useState({});
   useEffect(() => {
-    // Test PDF worker configuration with fallback
-    testPdfWorker().then((isWorking) => {
-      if (!isWorking) {
-        console.warn("PDF worker test failed - PDFs may not load properly");
-        // Try to reconfigure with a different approach
-        import("react-pdf").then(({ pdfjs }) => {
-          // Fallback to CDN worker if local worker fails
-          pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs`;
-          console.log("Fallback to CDN PDF worker configured");
-        });
-      }
-    });
-
     // Use imported data instead of fetching
     const mappedEducation = educationData.map((item) => ({
       ...item,
