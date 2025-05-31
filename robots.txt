@@ -1,0 +1,6 @@
+# robots.txt for Rouni Gorgees Portfolio
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://ronniegrg.github.io/portfolio/sitemap.xml

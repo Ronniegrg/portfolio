@@ -1,0 +1,52 @@
+{
+  "name": "Rouni Gorgees Portfolio",
+  "short_name": "RG Portfolio",
+  "description": "Portfolio of Rouni Gorgees, Software Developer.",
+  "start_url": "/portfolio/?v=1",
+  "scope": "/portfolio/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "dir": "ltr",
+  "lang": "en",
+  "categories": ["portfolio", "web development", "software development"],
+  "screenshots": [
+    {
+      "src": "/portfolio/screenshots/mobile-home.png",
+      "sizes": "750x1334",
+      "type": "image/png"
+    },
+    {
+      "src": "/portfolio/screenshots/desktop-home.png",
+      "sizes": "1920x1080",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Projects",
+      "url": "/portfolio/projects",
+      "description": "View my portfolio projects"
+    },
+    {
+      "name": "Contact",
+      "url": "/portfolio/contact",
+      "description": "Get in touch with me"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/portfolio/rg-logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/portfolio/rg-logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
