@@ -24,7 +24,7 @@ import salesforceAdmin from "../assets/salesforcecertifiedadministrator.png";
 import mcmaster from "../assets/mcmaster.jpg";
 import mohawk from "../assets/mohawk-college.png";
 import Modal from "../components/Modal";
-import { Document, Page, pdfjs } from "react-pdf";
+import { Document, Page } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "../styles/pdf.css"; // Additional custom PDF styles
@@ -32,14 +32,13 @@ import { Helmet } from "react-helmet-async";
 import educationData from "../data/education.json";
 import experiencesData from "../data/experiences.json";
 import skillsData from "../data/skills.json";
+import { configurePdfWorker, testPdfWorker } from "../utils/pdfWorker";
 
-// Configure PDF.js worker for both development and production
-if (import.meta.env.PROD) {
-  // Production: Use local worker file
-  pdfjs.GlobalWorkerOptions.workerSrc = `/portfolio/pdfjs/pdf.worker.min.js`;
-} else {
-  // Development: Use local worker file from public directory
-  pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.js`;
+// Configure PDF.js worker with error handling
+try {
+  configurePdfWorker();
+} catch (error) {
+  console.error("Failed to configure PDF worker:", error);
 }
 
 const logoMap = {
@@ -67,8 +66,20 @@ const About = () => {
   const [education, setEducation] = useState([]);
   const [experiences, setExperiences] = useState([]);
   const [skillCategories, setSkillCategories] = useState({});
-
   useEffect(() => {
+    // Test PDF worker configuration with fallback
+    testPdfWorker().then((isWorking) => {
+      if (!isWorking) {
+        console.warn("PDF worker test failed - PDFs may not load properly");
+        // Try to reconfigure with a different approach
+        import("react-pdf").then(({ pdfjs }) => {
+          // Fallback to CDN worker if local worker fails
+          pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.8.69/build/pdf.worker.min.mjs`;
+          console.log("Fallback to CDN PDF worker configured");
+        });
+      }
+    });
+
     // Use imported data instead of fetching
     const mappedEducation = educationData.map((item) => ({
       ...item,
@@ -95,11 +106,11 @@ const About = () => {
   };
   // Map education id to PDF file names in public folder
   const pdfFiles = {
-    1: "Cert2863203_OmniStudioDeveloper_20230109.pdf",
-    2: "Cert2595678_PlatformDeveloperI_20220926.pdf",
-    3: "Cert2499846_Administrator_20220817.pdf",
-    4: "Web-Design.pdf",
-    5: "Computer-System-Technology-Software-Development.pdf",
+    1: "/portfolio/Cert2863203_OmniStudioDeveloper_20230109.pdf",
+    2: "/portfolio/Cert2595678_PlatformDeveloperI_20220926.pdf",
+    3: "/portfolio/Cert2499846_Administrator_20220817.pdf",
+    4: "/portfolio/Web-Design.pdf",
+    5: "/portfolio/Computer-System-Technology-Software-Development.pdf",
   };
 
   return (
@@ -281,7 +292,7 @@ const About = () => {
                                   onClick={() =>
                                     setPdfModal({
                                       open: true,
-                                      src: `${import.meta.env.PROD ? "/portfolio/" : "/"}${pdfFiles[edu.id]}`,
+                                      src: pdfFiles[edu.id],
                                     })
                                   }
                                   style={{
@@ -298,7 +309,7 @@ const About = () => {
                                   View Certificate
                                 </button>
                                 <a
-                                  href={`${import.meta.env.PROD ? "/portfolio/" : "/"}${pdfFiles[edu.id]}`}
+                                  href={pdfFiles[edu.id]}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   style={{
@@ -505,50 +516,57 @@ const About = () => {
                 onLoadSuccess={({ numPages }) => setNumPages(numPages)}
                 onLoadError={(error) => {
                   console.error("Error loading PDF:", error);
-
-                  // Enhanced fallback mechanism
-                  const currentWorker = pdfjs.GlobalWorkerOptions.workerSrc;
-
-                  // Try different worker sources as fallbacks
-                  if (import.meta.env.PROD) {
-                    if (
-                      currentWorker === "/portfolio/pdfjs/pdf.worker.min.js"
-                    ) {
-                      // Fallback 1: Try the root worker
-                      console.log(
-                        "Trying fallback worker: /portfolio/pdf.worker.min.js"
-                      );
-                      pdfjs.GlobalWorkerOptions.workerSrc =
-                        "/portfolio/pdf.worker.min.js";
-                    } else {
-                      // Fallback 2: Try direct path without /portfolio prefix
-                      console.log("Trying direct path worker");
-                      pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.js";
-                    }
-                  } else {
-                    // In development, try alternative paths
-                    if (currentWorker === "/pdfjs/pdf.worker.min.js") {
-                      console.log("Trying direct path worker");
-                      pdfjs.GlobalWorkerOptions.workerSrc = "pdf.worker.min.js";
-                    }
-                  }
-
-                  // Try alternative URL if first attempt fails
+                  // Handle different types of PDF loading errors
                   if (
-                    pdfModal.src &&
-                    !pdfModal.src.startsWith("http") &&
-                    !pdfModal.src.startsWith("/portfolio/")
+                    error.message &&
+                    error.message.includes("The API version")
                   ) {
-                    const fallbackUrl = `https://ronniegrg.github.io/portfolio/${pdfModal.src}`;
-                    console.log("Trying fallback URL:", fallbackUrl);
-                    setPdfModal({ open: true, src: fallbackUrl });
-                    return;
+                    console.warn(
+                      "PDF.js version mismatch detected. This usually happens when the worker version doesn't match the library version."
+                    );
+                  } else if (
+                    error.message &&
+                    error.message.includes("worker")
+                  ) {
+                    console.warn(
+                      "PDF worker failed, this might be due to CORS or file loading issues"
+                    );
                   }
+                  // Don't reset modal state here to prevent infinite loops
                 }}
                 loading={<div>Loading PDF...</div>}
                 error={
-                  <div style={{ padding: "2rem", color: "var(--text-color)" }}>
-                    <p>Failed to load PDF. You can try:</p>
+                  <div
+                    style={{
+                      padding: "2rem",
+                      color: "var(--text-color)",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div style={{ marginBottom: "1rem" }}>
+                      <h3
+                        style={{
+                          color: "var(--error-color, #dc3545)",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        PDF Loading Error
+                      </h3>
+                      <p>
+                        The PDF certificate could not be displayed in the
+                        viewer.
+                      </p>
+                      <p
+                        style={{
+                          fontSize: "0.9rem",
+                          color: "var(--text-muted)",
+                          marginBottom: "1.5rem",
+                        }}
+                      >
+                        This might be due to browser security settings or
+                        network issues.
+                      </p>
+                    </div>
                     <a
                       href={
                         pdfModal.src
@@ -561,11 +579,24 @@ const About = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        color: "var(--primary-color)",
-                        textDecoration: "underline",
+                        display: "inline-block",
+                        padding: "0.75rem 1.5rem",
+                        backgroundColor: "var(--primary-color)",
+                        color: "white",
+                        textDecoration: "none",
+                        borderRadius: "6px",
+                        fontWeight: "600",
+                        transition: "background-color 0.2s ease",
+                      }}
+                      onMouseOver={(e) => {
+                        e.target.style.backgroundColor =
+                          "var(--primary-color-dark, #1d4ed8)";
+                      }}
+                      onMouseOut={(e) => {
+                        e.target.style.backgroundColor = "var(--primary-color)";
                       }}
                     >
-                      Open PDF in new tab
+                      📄 Open PDF in New Tab
                     </a>
                   </div>
                 }

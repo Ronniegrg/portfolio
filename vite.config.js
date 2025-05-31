@@ -1,22 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/portfolio/",
-  plugins: [
-    react(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: "node_modules/pdfjs-dist/build/pdf.worker.min.mjs",
-          dest: "",
-          rename: "pdf.worker.min.js",
-        },
-      ],
-    }),
-  ],
+  plugins: [react()],
   build: {
     sourcemap: true,
     rollupOptions: {
@@ -25,7 +13,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ["react", "react-dom", "react-router-dom"],
           charts: ["chart.js", "react-chartjs-2"],
-          pdf: ["react-pdf", "pdfjs-dist"],
+          pdf: ["react-pdf"],
           icons: ["react-icons"],
         },
         // Add cache busting for chunks with more predictable naming
@@ -69,11 +57,12 @@ export default defineConfig({
         // Content Security Policy
         const csp = [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.emailjs.com https://www.gstatic.com https://www.google.com",
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.emailjs.com https://www.gstatic.com https://www.google.com https://unpkg.com",
+          "worker-src 'self' blob: https://unpkg.com",
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
           "img-src 'self' data: https: blob:",
-          "connect-src 'self' https://api.emailjs.com https://api.github.com",
+          "connect-src 'self' https://api.emailjs.com https://api.github.com https://github-contributions-api.jogruber.de https://unpkg.com",
           "frame-src 'self' https://www.google.com",
           "object-src 'none'",
           "base-uri 'self'",
@@ -81,6 +70,11 @@ export default defineConfig({
         ].join("; ");
 
         res.setHeader("Content-Security-Policy", csp);
+
+        // Handle PDF worker files specifically
+        if (req.url && req.url.includes("pdf.worker")) {
+          res.setHeader("Content-Type", "application/javascript");
+        }
 
         if (req.url && req.url.endsWith(".webmanifest")) {
           res.setHeader("Content-Type", "application/manifest+json");
