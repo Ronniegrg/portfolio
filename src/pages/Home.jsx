@@ -217,22 +217,31 @@ const Home = () => {
               </div>
             </div>
             <div
-              className={`${styles.heroImage} ${styles.animateItem}`}
+              className={`${styles.heroImageWrapper} ${styles.animateItem}`}
               style={{ animationDelay: "0.4s" }}
             >
-              <picture>
-                <source srcSet={developerImage} type="image/webp" />
-                <img
-                  src={developerImageFallback}
-                  alt="Rouni Gorgees - Software Developer"
-                  className={styles.developerImage}
-                  width="400"
-                  height="600"
-                  loading="eager"
-                  fetchPriority="high"
-                />
-              </picture>
-              <div className={styles.blob}></div>
+              <div className={styles.imageGlowEffect}></div>
+              <div className={styles.imageCard}>
+                <picture>
+                  <source srcSet={developerImage} type="image/webp" />
+                  <img
+                    src={developerImageFallback}
+                    alt="Rouni Gorgees - Software Developer"
+                    className={styles.developerImage}
+                    width="400"
+                    height="500"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                </picture>
+                <div className={styles.imageVignette}></div>
+                <div className={styles.statusPill}>
+                  <span className={styles.pulseDot}></span>
+                  <span className={styles.statusLabel}>
+                    Available for Work
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
