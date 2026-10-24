@@ -2,36 +2,35 @@
   {
     "id": 1,
     "title": "Full Stack Web Developer",
-    "company": "Pure Air comfort. Contract",
+    "company": "Pure Air Comfort",
     "companyLink": "https://www.pureaircomfortable.com/",
-    "location": "San Diego, California, USA . Remote",
-    "duration": "One Week",
-    "type": "Part-time",
+    "location": "San Diego, California, USA (Remote)",
+    "duration": "Contract Project",
+    "type": "Contract",
     "responsibilities": [
-      "Designed and Develped the website fro mthe ground up usning React, HTML, CSS, and JavaScript",
-      "Implemented responsive design principles to ensure the website is mobile-friendly and accessible on various devices",
-      "Integrated third-party APIs for enhanced functionality, such as Google Maps and social media sharing",
-      "Collaborated with the client to gather requirements and provide regular updates on project progress",
-      "Conducted thorough testing and debugging to ensure the website is free of errors and performs optimally",
-      "Provided ongoing support and maintenance for the website after launch, including troubleshooting issues and implementing updates as needed"
+      "Designed and developed the website from the ground up using React, HTML5, CSS3, and JavaScript.",
+      "Implemented mobile-first responsive design ensuring seamless cross-device compatibility and accessibility.",
+      "Integrated third-party APIs including Google Maps and social media sharing to improve customer engagement.",
+      "Conducted performance optimization and end-to-end testing to ensure fast load times and clean cross-browser rendering.",
+      "Collaborated closely with the client to define functional requirements and delivered the project on schedule."
     ],
-    "technologies": ["React", "JavaScript", "HTML", "CSS", "Git"]
+    "technologies": ["React", "JavaScript", "HTML5", "CSS3", "Git"]
   },
   {
     "id": 2,
     "title": "Salesforce Developer",
-    "company": "ShoreWise Consulting. Internship",
-    "location": "Mississauga, Ontrario, Canada . Remote",
+    "company": "ShoreWise Consulting",
+    "location": "Mississauga, Ontario, Canada (Remote)",
     "duration": "Jul 2022 - May 2023",
     "type": "Full-time",
     "responsibilities": [
-      "Configuration for Standard/Custom Objects, Tabs, Custom Settings, Record Types, Validation Rules, Flow, Workflow rules, Approval Process, Process Builder, Profiling, Reports and Dashboards, SOQL, Data Loader, Workbench, JIRA etc.",
-      "Build Apex Classes, Triggers, and Aura Component Pages for project Modules.",
-      "Developed Lightning Web Components (LWC) for better performance and user experience",
-      "Worked with Salesforce APIs to integrate with external systems",
-      "Participated in Agile ceremonies and collaborated with cross-functional teams",
-      "Work on OmniScripts, DataRaptors, Vlocity Cards, Integration Procedures, and FlexCards",
-      "Worked on Salesforce CPQ and Billing for product configuration and pricing"
+      "Configured and customized Salesforce Core features: Standard & Custom Objects, Validation Rules, Record Types, Flows, and Process Automation.",
+      "Engineered Apex Classes, Triggers, and Aura Components to deliver mission-critical business modules.",
+      "Developed modular Lightning Web Components (LWC) to enhance UI performance and user workflow efficiency.",
+      "Integrated Salesforce with external systems using REST/SOAP APIs.",
+      "Built complex OmniStudio solutions including OmniScripts, DataRaptors, FlexCards, and Integration Procedures.",
+      "Configured Salesforce CPQ and Billing for dynamic product bundling, pricing rules, and quote generation.",
+      "Collaborated in an Agile/Scrum environment with cross-functional teams using JIRA and Git."
     ],
     "technologies": [
       "Salesforce",
@@ -55,43 +54,38 @@
   {
     "id": 3,
     "title": "Full Stack Web Developer",
-    "company": "Gorgis Air Conditioning & Heating Inc. Contract",
+    "company": "Gorgis Air Conditioning & Heating Inc.",
     "companyLink": "https://www.gorgisairheat.com/",
-    "location": "San Diego, California, USA . Remote",
+    "location": "San Diego, California, USA (Remote)",
     "duration": "Jun 2021 - Sep 2021",
-    "type": "Part-time",
+    "type": "Contract",
     "responsibilities": [
-      "Designed and Develped the website fro mthe ground up usning Php, HTML, CSS, and JavaScript",
-      "Implemented responsive design principles to ensure the website is mobile-friendly and accessible on various devices",
-      "Integrated third-party APIs for enhanced functionality, such as Google Maps and social media sharing",
-      "Collaborated with the client to gather requirements and provide regular updates on project progress",
-      "Conducted thorough testing and debugging to ensure the website is free of errors and performs optimally",
-      "Provided ongoing support and maintenance for the website after launch, including troubleshooting issues and implementing updates as needed",
-      "Worked with the client to develop a content management system (CMS) for easy updates and management of website content"
+      "Designed and developed the commercial web platform from the ground up using PHP, HTML5, CSS3, and JavaScript.",
+      "Implemented responsive UI layouts optimized for mobile devices and varied screen resolutions.",
+      "Integrated Google Maps API for service area discovery and dynamic contact inquiry forms.",
+      "Developed a customized content management solution (CMS) allowing the client to independently manage service listings and promotions.",
+      "Delivered post-launch maintenance, search engine optimization (SEO), and performance monitoring."
     ],
-    "technologies": ["Php", "HTML", "CSS", "JavaScript", "MySQL", "Git"]
+    "technologies": ["PHP", "HTML5", "CSS3", "JavaScript", "MySQL", "Git"]
   },
   {
     "id": 4,
     "title": "Web Developer",
-    "company": "SAPSOL Technologies. Contract ",
-    "location": "Mississauga, Ontrario, Canada . Remote",
+    "company": "SAPSOL Technologies",
+    "location": "Mississauga, Ontario, Canada (Remote)",
     "duration": "Jun 2020 - Dec 2020",
-    "type": "Full-time",
+    "type": "Contract",
     "responsibilities": [
-      "Developed Web pages based on the design specifications provided by the client",
-      "Integrated new Features into the web appliction Such as Forms, and APIs",
-      "Maintained and updated existing web pages to ensure they are up-to-date and functioning properly",
-      "Created and designed the main portal from the ground up using HTML, CSS, and JavaScript",
-      "Collaborated with other virtual team members to ensure the project was completed on time and met the client's requirements",
-      "Conducted thorough testing and debugging to ensure the website is free of errors and performs optimally",
-      "Provided ongoing support and maintenance for the website after launch, including troubleshooting issues and implementing updates as needed",
-      "Worked with the client to develop a content management system (CMS) for easy updates and management of website content"
+      "Built and maintained client web pages adhering to strict design specifications and accessibility guidelines.",
+      "Integrated interactive client features including dynamic forms, validation handlers, and RESTful APIs.",
+      "Engineered and styled the main customer portal from scratch using HTML5, CSS3, JavaScript, and Bootstrap.",
+      "Collaborated with distributed engineering teams in an Agile development lifecycle to deliver milestones on schedule.",
+      "Conducted cross-browser QA testing and bug resolution across diverse desktop and mobile browsers."
     ],
     "technologies": [
-      "Java (Serverless, J2EE)",
+      "Java",
       "HTML5",
-      "CSS",
+      "CSS3",
       "JavaScript",
       "MySQL",
       "Git",

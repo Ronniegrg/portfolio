@@ -1,12 +1,20 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { FaFileAlt, FaArrowRight, FaCode } from "react-icons/fa";
+import {
+  FaFileAlt,
+  FaArrowRight,
+  FaCode,
+  FaGithub,
+  FaLinkedin,
+  FaEnvelope,
+} from "react-icons/fa";
 import styles from "./Home.module.css";
 import useGithubBio from "../hooks/useGithubBio";
 import { Helmet } from "react-helmet-async";
 import StructuredData from "../components/StructuredData";
 
-const developerImage = "/portfolio/rouni_gorgees.png";
+const developerImage = "/portfolio/rouni_gorgees.webp";
+const developerImageFallback = "/portfolio/rouni_gorgees.png";
 
 const Home = () => {
   const heroRef = useRef(null);
@@ -48,10 +56,13 @@ const Home = () => {
           content="Portfolio of Rouni Gorgees, a software developer based in Ontario, Canada. Explore projects, skills, and contact information."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ronniegrg.github.io/" />
+        <meta
+          property="og:url"
+          content="https://ronniegrg.github.io/portfolio/"
+        />
         <meta
           property="og:image"
-          content="https://ronniegrg.github.io/rg-logo.svg"
+          content="https://ronniegrg.github.io/portfolio/rg-logo.svg"
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
@@ -64,7 +75,7 @@ const Home = () => {
         />
         <meta
           name="twitter:image"
-          content="https://ronniegrg.github.io/rg-logo.svg"
+          content="https://ronniegrg.github.io/portfolio/rg-logo.svg"
         />
       </Helmet>
       <StructuredData
@@ -73,7 +84,7 @@ const Home = () => {
           "@type": "Person",
           name: "Rouni Gorgees",
           jobTitle: "Software Developer",
-          url: "https://ronniegrg.github.io/",
+          url: "https://ronniegrg.github.io/portfolio/",
           sameAs: [
             "https://github.com/Ronniegrg",
             "https://www.linkedin.com/in/rouni-gorgees-207b56167/",
@@ -175,18 +186,52 @@ const Home = () => {
                 className={`${styles.socialLinks} ${styles.animateItem}`}
                 style={{ animationDelay: "1s" }}
               >
-                {/* Social links will go here if needed in the future */}
+                <a
+                  href="https://github.com/Ronniegrg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.socialLink}
+                  aria-label="GitHub Profile"
+                  title="GitHub"
+                >
+                  <FaGithub size={20} />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/rouni-gorgees-207b56167/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.socialLink}
+                  aria-label="LinkedIn Profile"
+                  title="LinkedIn"
+                >
+                  <FaLinkedin size={20} />
+                </a>
+                <a
+                  href="mailto:rounigorgees@gmail.com"
+                  className={styles.socialLink}
+                  aria-label="Send Email"
+                  title="Email Me"
+                >
+                  <FaEnvelope size={20} />
+                </a>
               </div>
             </div>
             <div
               className={`${styles.heroImage} ${styles.animateItem}`}
               style={{ animationDelay: "0.4s" }}
             >
-              <img
-                src={developerImage}
-                alt="Rouni Gorgees - Software Developer"
-                className={styles.developerImage}
-              />
+              <picture>
+                <source srcSet={developerImage} type="image/webp" />
+                <img
+                  src={developerImageFallback}
+                  alt="Rouni Gorgees - Software Developer"
+                  className={styles.developerImage}
+                  width="400"
+                  height="600"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </picture>
               <div className={styles.blob}></div>
             </div>
           </div>

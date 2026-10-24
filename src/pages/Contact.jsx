@@ -330,10 +330,13 @@ const Contact = () => {
           content="Contact Rouni Gorgees, software developer, for collaboration, project inquiries, or professional networking."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ronniegrg.github.io/contact" />
+        <meta
+          property="og:url"
+          content="https://ronniegrg.github.io/portfolio/contact"
+        />
         <meta
           property="og:image"
-          content="https://ronniegrg.github.io/rg-logo.svg"
+          content="https://ronniegrg.github.io/portfolio/rg-logo.svg"
         />
         <script type="application/ld+json">{`
           {
@@ -341,7 +344,7 @@ const Contact = () => {
             "@type": "Person",
             "name": "Rouni Gorgees",
             "jobTitle": "Software Developer",
-            "url": "https://ronniegrg.github.io/contact",
+            "url": "https://ronniegrg.github.io/portfolio/contact",
             "sameAs": [
               "https://github.com/Ronniegrg",
               "https://www.linkedin.com/in/rouni-gorgees-207b56167/"

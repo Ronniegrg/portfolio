@@ -99,244 +99,129 @@ const Projects = () => {
       }
     };
   }, []);
-  // Fetch all years from repos
-  useEffect(() => {
-    const fetchYears = async () => {
-      try {
-        const response = await fetch(
-          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`,
-          GITHUB_TOKEN
-            ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
-            : undefined
-        );
+  // Repositories stored in state and cached in sessionStorage to prevent 403 rate limiting
+  const [allRepos, setAllRepos] = useState([]);
 
-        if (!response.ok) {
-          console.warn(
-            `GitHub API error: ${response.status}. Using fallback data.`
-          ); // Use fallback data to get years
-          const yearsSet = new Set();
-          FALLBACK_PROJECTS.forEach((repo) => {
-            yearsSet.add(new Date(repo.created_at).getFullYear());
-            yearsSet.add(new Date(repo.updated_at).getFullYear());
-          });
-          const yearsArr = Array.from(yearsSet).sort((a, b) => b - a);
-          setAllYears(yearsArr);
-          if (!yearsArr.includes(year)) setYear(yearsArr[0]);
-          return;
-        }
-
-        const repos = await response.json();
-        const yearsSet = new Set();
-        repos.forEach((repo) => {
-          yearsSet.add(new Date(repo.created_at).getFullYear());
-          yearsSet.add(new Date(repo.updated_at).getFullYear());
-        });
-        const yearsArr = Array.from(yearsSet).sort((a, b) => b - a);
-        setAllYears(yearsArr);
-        // If current year not in repos, default to most recent year
-        if (!yearsArr.includes(year)) setYear(yearsArr[0]);
-      } catch (error) {
-        console.warn("Error fetching years from GitHub API:", error); // fallback: use fallback data
-        const yearsSet = new Set();
-        FALLBACK_PROJECTS.forEach((repo) => {
-          yearsSet.add(new Date(repo.created_at).getFullYear());
-          yearsSet.add(new Date(repo.updated_at).getFullYear());
-        });
-        const yearsArr = Array.from(yearsSet).sort((a, b) => b - a);
-        setAllYears(yearsArr.length > 0 ? yearsArr : [year]);
-      }
-    };
-    fetchYears();
-  }, [GITHUB_USERNAME, GITHUB_TOKEN, year]);
-  // Fetch GitHub repositories based on year
   useEffect(() => {
-    const fetchRepositories = async () => {
+    const loadRepositories = async () => {
       setIsLoading(true);
       setError(null);
 
+      const CACHE_KEY = `gh_repos_${GITHUB_USERNAME}`;
+      const CACHE_TIME_KEY = `gh_repos_time_${GITHUB_USERNAME}`;
+      const CACHE_TTL = 15 * 60 * 1000; // 15 mins
+
+      let reposData = null;
+
       try {
-        // Fetch all repositories for the user
-        const response = await fetch(
-          `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`,
-          GITHUB_TOKEN
-            ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
-            : undefined
-        );
-        if (!response.ok) {
-          console.warn(
-            `GitHub API error: ${response.status}. Using fallback data.`
-          );
-          // Use fallback data when API fails
-          const filteredRepos = FALLBACK_PROJECTS.filter((repo) => {
-            const createdDate = new Date(repo.created_at);
-            const updatedDate = new Date(repo.updated_at);
-            return (
-              createdDate.getFullYear() === year ||
-              updatedDate.getFullYear() === year
-            );
-          });
-
-          const formattedProjects = filteredRepos.map((repo) => ({
-            id: repo.id,
-            title: repo.name,
-            description:
-              repo.description ||
-              `A ${repo.languages[0] || "code"} repository.`,
-            github: repo.html_url,
-            demo: repo.homepage || "#",
-            githubPages: repo.homepage,
-            tags: repo.languages || ["Code"],
-            stars: repo.stargazers_count,
-            forks: repo.forks_count,
-            created: new Date(repo.created_at),
-            updated: new Date(repo.updated_at),
-            isForked: false,
-          }));
-
-          formattedProjects.sort((a, b) => b.updated - a.updated);
-          setProjects(formattedProjects);
-          setIsLoading(false);
-          return;
+        const cached = sessionStorage.getItem(CACHE_KEY);
+        const cachedTime = sessionStorage.getItem(CACHE_TIME_KEY);
+        if (
+          cached &&
+          cachedTime &&
+          Date.now() - Number(cachedTime) < CACHE_TTL
+        ) {
+          reposData = JSON.parse(cached);
         }
-
-        const repos = await response.json();
-
-        // Filter repositories by year (created or updated in the selected year)
-        const filteredRepos = repos.filter((repo) => {
-          const createdDate = new Date(repo.created_at);
-          const updatedDate = new Date(repo.updated_at);
-          return (
-            createdDate.getFullYear() === year ||
-            updatedDate.getFullYear() === year
-          );
-        }); // Format repositories for display
-        const formattedProjects = await Promise.all(
-          filteredRepos.map(async (repo) => {
-            // Try to fetch languages for the repo
-            let languages = [];
-            try {
-              // Construct the languages URL manually to avoid any potential issues
-              const languagesUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${repo.name}/languages`;
-
-              const langResponse = await fetch(
-                languagesUrl,
-                GITHUB_TOKEN
-                  ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
-                  : undefined
-              );
-              if (langResponse.ok) {
-                const langData = await langResponse.json();
-                languages = Object.keys(langData);
-              } else if (langResponse.status === 403) {
-                // Rate limit hit, skip languages for this repo
-                languages = repo.language ? [repo.language] : [];
-              } else if (langResponse.status === 404) {
-                // Repository doesn't have languages endpoint or not accessible
-                languages = repo.language ? [repo.language] : [];
-              }
-            } catch (error) {
-              // Log the error for debugging but continue with fallback
-              console.warn(
-                `Failed to fetch languages for ${repo.name}:`,
-                error
-              );
-              // fallback: skip languages
-              languages = repo.language ? [repo.language] : [];
-            }
-
-            // Check for GitHub Pages (skip this since it's causing 403 errors)
-            let githubPagesUrl = null;
-
-            // Fallback: check if repo name follows GitHub Pages pattern
-            if (repo.name === `${GITHUB_USERNAME}.github.io`) {
-              githubPagesUrl = `https://${GITHUB_USERNAME}.github.io`;
-            } else if (repo.has_pages) {
-              githubPagesUrl = `https://${GITHUB_USERNAME}.github.io/${repo.name}`;
-            }
-
-            // Additional fallback checks for common GitHub Pages patterns
-            if (!githubPagesUrl) {
-              // Check if the repo has a GitHub Pages URL pattern in homepage
-              if (repo.homepage && repo.homepage.includes(".github.io")) {
-                githubPagesUrl = repo.homepage;
-              }
-              // Check for common project names that might have pages
-              else if (
-                repo.name.toLowerCase().includes("portfolio") ||
-                repo.name.toLowerCase().includes("website") ||
-                repo.name.toLowerCase().includes("blog") ||
-                repo.name.toLowerCase() === "portfolio" ||
-                repo.name === `${GITHUB_USERNAME}.github.io`
-              ) {
-                // These types of repos commonly have GitHub Pages
-                githubPagesUrl = `https://${GITHUB_USERNAME}.github.io/${repo.name}`;
-              }
-            }
-
-            // Create formatted project object
-            return {
-              id: repo.id,
-              title: repo.name,
-              description:
-                repo.description || `A ${repo.language || "code"} repository.`,
-              github: repo.html_url,
-              demo: repo.homepage || "#",
-              githubPages: githubPagesUrl,
-              tags:
-                languages.length > 0
-                  ? languages
-                  : repo.language
-                  ? [repo.language]
-                  : ["Code"],
-              stars: repo.stargazers_count,
-              forks: repo.forks_count,
-              created: new Date(repo.created_at),
-              updated: new Date(repo.updated_at),
-              isForked: repo.fork,
-            };
-          })
-        ); // Sort projects by updated date (newest first)
-        formattedProjects.sort((a, b) => b.updated - a.updated);
-
-        setProjects(formattedProjects);
-      } catch (err) {
-        console.error("Error fetching GitHub repositories:", err);
-        console.warn("Using fallback data due to API error");
-
-        // Use fallback data when API fails
-        const filteredRepos = FALLBACK_PROJECTS.filter((repo) => {
-          const createdDate = new Date(repo.created_at);
-          const updatedDate = new Date(repo.updated_at);
-          return (
-            createdDate.getFullYear() === year ||
-            updatedDate.getFullYear() === year
-          );
-        });
-
-        const formattedProjects = filteredRepos.map((repo) => ({
-          id: repo.id,
-          title: repo.name,
-          description:
-            repo.description || `A ${repo.languages[0] || "code"} repository.`,
-          github: repo.html_url,
-          demo: repo.homepage || "#",
-          githubPages: repo.homepage,
-          tags: repo.languages || ["Code"],
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          created: new Date(repo.created_at),
-          updated: new Date(repo.updated_at),
-          isForked: false,
-        }));
-
-        formattedProjects.sort((a, b) => b.updated - a.updated);
-        setProjects(formattedProjects);
-      } finally {
-        setIsLoading(false);
+      } catch {
+        // sessionStorage unavailable
       }
+
+      if (!reposData) {
+        try {
+          const response = await fetch(
+            `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`,
+            GITHUB_TOKEN
+              ? { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
+              : undefined
+          );
+
+          if (response.ok) {
+            reposData = await response.json();
+            try {
+              sessionStorage.setItem(CACHE_KEY, JSON.stringify(reposData));
+              sessionStorage.setItem(CACHE_TIME_KEY, String(Date.now()));
+            } catch {
+              // ignore storage quota error
+            }
+          } else {
+            console.warn(
+              `GitHub API error: ${response.status}. Using fallback data.`
+            );
+            reposData = FALLBACK_PROJECTS;
+          }
+        } catch (fetchErr) {
+          console.warn("GitHub API error, using fallback:", fetchErr);
+          reposData = FALLBACK_PROJECTS;
+        }
+      }
+
+      setAllRepos(reposData);
+
+      // Extract all distinct years
+      const yearsSet = new Set();
+      reposData.forEach((repo) => {
+        if (repo.created_at)
+          yearsSet.add(new Date(repo.created_at).getFullYear());
+        if (repo.updated_at)
+          yearsSet.add(new Date(repo.updated_at).getFullYear());
+      });
+      const yearsArr = Array.from(yearsSet).sort((a, b) => b - a);
+      if (yearsArr.length > 0) {
+        setAllYears(yearsArr);
+        setYear((current) =>
+          yearsArr.includes(current) ? current : yearsArr[0]
+        );
+      }
+      setIsLoading(false);
     };
-    fetchRepositories();
-  }, [year, GITHUB_USERNAME, GITHUB_TOKEN]);
+
+    loadRepositories();
+  }, [GITHUB_USERNAME, GITHUB_TOKEN]);
+
+  // Filter projects by selected year instantly without re-fetching
+  useEffect(() => {
+    if (!allRepos || allRepos.length === 0) return;
+
+    const filtered = allRepos.filter((repo) => {
+      const createdDate = new Date(repo.created_at);
+      const updatedDate = new Date(repo.updated_at);
+      return (
+        createdDate.getFullYear() === year ||
+        updatedDate.getFullYear() === year
+      );
+    });
+
+    const formatted = filtered.map((repo) => {
+      let githubPagesUrl = null;
+      if (repo.name === `${GITHUB_USERNAME}.github.io`) {
+        githubPagesUrl = `https://${GITHUB_USERNAME}.github.io`;
+      } else if (repo.has_pages) {
+        githubPagesUrl = `https://${GITHUB_USERNAME}.github.io/${repo.name}`;
+      } else if (repo.homepage && repo.homepage.includes(".github.io")) {
+        githubPagesUrl = repo.homepage;
+      }
+
+      return {
+        id: repo.id,
+        title: repo.name,
+        description:
+          repo.description || `A ${repo.language || "code"} repository.`,
+        github: repo.html_url,
+        demo: repo.homepage || "#",
+        githubPages: githubPagesUrl,
+        tags: repo.languages || (repo.language ? [repo.language] : ["Code"]),
+        stars: repo.stargazers_count || 0,
+        forks: repo.forks_count || 0,
+        created: new Date(repo.created_at),
+        updated: new Date(repo.updated_at),
+        isForked: Boolean(repo.fork),
+      };
+    });
+
+    formatted.sort((a, b) => b.updated - a.updated);
+    setProjects(formatted);
+  }, [allRepos, year, GITHUB_USERNAME]);
 
   // Format date for display
   const formatDate = (date) => {
@@ -363,11 +248,11 @@ const Projects = () => {
         <meta property="og:type" content="website" />
         <meta
           property="og:url"
-          content="https://ronniegrg.github.io/projects"
+          content="https://ronniegrg.github.io/portfolio/projects"
         />
         <meta
           property="og:image"
-          content="https://ronniegrg.github.io/rg-logo.svg"
+          content="https://ronniegrg.github.io/portfolio/rg-logo.svg"
         />
         <script type="application/ld+json">{`
           {
@@ -375,7 +260,7 @@ const Projects = () => {
             "@type": "Person",
             "name": "Rouni Gorgees",
             "jobTitle": "Software Developer",
-            "url": "https://ronniegrg.github.io/projects",
+            "url": "https://ronniegrg.github.io/portfolio/projects",
             "sameAs": [
               "https://github.com/Ronniegrg",
               "https://www.linkedin.com/in/rouni-gorgees-207b56167/"

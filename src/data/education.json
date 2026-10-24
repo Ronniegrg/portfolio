@@ -20,11 +20,11 @@
   },
   {
     "id": 5,
-    "degree": "Computer Systems Technolog - Software Development, Computer Software Engineering",
+    "degree": "Computer Systems Technology - Software Development",
     "institution": "Mohawk College",
     "location": "Hamilton, Ontario",
     "duration": "2013-2018",
-    "description": "foundational skills for software application development. This hands-on program covers key topics including a variety of programming languages, web application development, mobile application development, systems analysis, database design, quality assurance testing, technical writing, and communication skills.",
+    "description": "Comprehensive program in software engineering and application development. Covered key disciplines including object-oriented programming, data structures, web and mobile development, systems analysis, relational database design, and quality assurance testing.",
     "achievements": ["Completed with 84% score"],
     "courses": [
       "Introduction to Programming",
@@ -37,16 +37,16 @@
       "Database Design",
       "Web Application Development",
       "Mobile Application Development",
-      "Web languages including HTML, CSS, JavaScript (Ajax, JSON), PHP,jQuery, ASP.NET, Node.js, and React.js",
-      "Programming languages including Python, C, C++, Java, C# and Swift",
+      "Web languages including HTML, CSS, JavaScript (Ajax, JSON), PHP, jQuery, ASP.NET, Node.js, and React.js",
+      "Programming languages including Python, C, C++, Java, C#, and Swift",
       "Mobile application development for Android and iOS",
       "Database architecture using MySQL, Oracle, and SQL Server",
       "Tools and frameworks including IntelliJ, Visual Studio, Android Studio, MVC, and Laravel",
-      "Project Management including metics for optimizing IT projects",
+      "Project Management and metrics for optimizing IT workflows",
       "Internet of Things (IoT) using Raspberry Pi",
-      "Machine Learning",
+      "Machine Learning Fundamentals",
       "Technical writing and presentations",
-      "System/businees analysis"
+      "Systems and business analysis"
     ],
     "logo": "mohawk"
   }

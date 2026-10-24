@@ -3,55 +3,53 @@
     "icon": "FaLaptopCode",
     "title": "Frontend",
     "skills": [
-      { "name": "React.js", "level": 90 },
-      { "name": "JavaScript (ES6+)", "level": 85 },
-      { "name": "HTML5", "level": 95 },
-      { "name": "CSS3/SCSS", "level": 90 },
-      { "name": "Tailwind CSS", "level": 85 },
-      { "name": "Redux", "level": 75 },
-      { "name": "TypeScript", "level": 70 }
+      { "name": "React.js", "proficiency": "Advanced", "tags": ["Hooks", "Router", "Context API", "Vite"] },
+      { "name": "JavaScript (ES6+)", "proficiency": "Advanced", "tags": ["Async/Await", "DOM", "Fetch", "ES Modules"] },
+      { "name": "TypeScript", "proficiency": "Proficient", "tags": ["Type Safety", "Interfaces", "Generics"] },
+      { "name": "HTML5 & CSS3/SCSS", "proficiency": "Advanced", "tags": ["Semantic HTML", "Flexbox", "Grid", "Animations"] },
+      { "name": "Tailwind CSS & Bootstrap", "proficiency": "Advanced", "tags": ["Utility Classes", "Responsive Design"] },
+      { "name": "Redux & State Management", "proficiency": "Proficient", "tags": ["Redux Toolkit", "Global State"] }
     ]
   },
   "backend": {
     "icon": "FaServer",
-    "title": "Backend",
+    "title": "Backend & Cloud",
     "skills": [
-      { "name": "Node.js", "level": 80 },
-      { "name": "Express", "level": 85 },
-      { "name": "C#/.NET", "level": 75 },
-      { "name": "REST API Design", "level": 80 },
-      { "name": "GraphQL", "level": 65 }
+      { "name": "Node.js & Express", "proficiency": "Advanced", "tags": ["REST APIs", "Middleware", "Auth"] },
+      { "name": "Salesforce & Apex", "proficiency": "Advanced", "tags": ["LWC", "Triggers", "SOQL", "OmniStudio"] },
+      { "name": "C# / .NET", "proficiency": "Proficient", "tags": ["OOP", "Web API", "MVC Pattern"] },
+      { "name": "REST API Architecture", "proficiency": "Advanced", "tags": ["Endpoints", "Security", "Integrations"] },
+      { "name": "PHP & Serverless", "proficiency": "Proficient", "tags": ["Backend Logic", "Database Queries"] }
     ]
   },
   "database": {
     "icon": "FaDatabase",
-    "title": "Database",
+    "title": "Databases",
     "skills": [
-      { "name": "MongoDB", "level": 80 },
-      { "name": "SQL", "level": 75 },
-      { "name": "PostgreSQL", "level": 70 },
-      { "name": "Firebase", "level": 65 }
+      { "name": "PostgreSQL & SQL", "proficiency": "Proficient", "tags": ["Relational Schemas", "Queries", "Joins"] },
+      { "name": "MongoDB", "proficiency": "Proficient", "tags": ["Mongoose", "NoSQL", "Aggregation"] },
+      { "name": "MySQL", "proficiency": "Proficient", "tags": ["Database Design", "Optimization"] },
+      { "name": "Firebase Firestore", "proficiency": "Proficient", "tags": ["Realtime DB", "Security Rules"] }
     ]
   },
   "tools": {
     "icon": "FaTools",
-    "title": "Tools & Others",
+    "title": "Tools & DevOps",
     "skills": [
-      { "name": "Git/GitHub", "level": 90 },
-      { "name": "VS Code", "level": 95 },
-      { "name": "Figma", "level": 70 },
-      { "name": "Docker", "level": 60 },
-      { "name": "CI/CD", "level": 65 },
-      { "name": "Jest/Testing", "level": 70 }
+      { "name": "Git & GitHub", "proficiency": "Advanced", "tags": ["Version Control", "Pull Requests", "CI/CD Actions"] },
+      { "name": "Vite & Modern Tooling", "proficiency": "Advanced", "tags": ["Fast HMR", "Build Optimization", "Code Splitting"] },
+      { "name": "Docker & Containers", "proficiency": "Familiar", "tags": ["Containerization", "Dockerfiles"] },
+      { "name": "Jest & Testing", "proficiency": "Proficient", "tags": ["Unit Testing", "Test-Driven Development"] },
+      { "name": "Figma & UI Design", "proficiency": "Proficient", "tags": ["Wireframing", "Component Specs"] }
     ]
   },
   "mobile": {
     "icon": "FaMobileAlt",
-    "title": "Mobile",
+    "title": "Mobile & Responsive",
     "skills": [
-      { "name": "React Native", "level": 65 },
-      { "name": "Flutter", "level": 50 },
-      { "name": "Responsive Design", "level": 85 }
+      { "name": "Responsive Web Design", "proficiency": "Advanced", "tags": ["Mobile-First", "Adaptive Layouts", "Media Queries"] },
+      { "name": "React Native", "proficiency": "Proficient", "tags": ["Cross-Platform", "Mobile UI Components"] },
+      { "name": "Flutter", "proficiency": "Familiar", "tags": ["Dart", "Cross-Platform Widgets"] }
     ]
   }
 }

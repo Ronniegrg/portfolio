@@ -101,10 +101,13 @@ const About = () => {
           content="Learn more about Rouni Gorgees, a passionate software developer with a strong foundation in web development, education, and certifications."
         />
         <meta property="og:type" content="profile" />
-        <meta property="og:url" content="https://ronniegrg.github.io/about" />
+        <meta
+          property="og:url"
+          content="https://ronniegrg.github.io/portfolio/about"
+        />
         <meta
           property="og:image"
-          content="https://ronniegrg.github.io/rg-logo.svg"
+          content="https://ronniegrg.github.io/portfolio/rg-logo.svg"
         />
         <script type="application/ld+json">{`
           {
@@ -112,7 +115,7 @@ const About = () => {
             "@type": "Person",
             "name": "Rouni Gorgees",
             "jobTitle": "Software Developer",
-            "url": "https://ronniegrg.github.io/about",
+            "url": "https://ronniegrg.github.io/portfolio/about",
             "sameAs": [
               "https://github.com/Ronniegrg",
               "https://www.linkedin.com/in/rouni-gorgees-207b56167/"
@@ -346,48 +349,36 @@ const About = () => {
                           )}
                         {skillCategories[activeSkillTab].title} Skills
                       </h3>
-                      <div className={styles.skillsList}>
+                      <div className={styles.skillsGrid}>
                         {skillCategories[activeSkillTab].skills.map(
                           (skill, index) => (
-                            <div key={index} className={styles.skillItem}>
-                              <div className={styles.skillInfo}>
-                                <span className={styles.skillName}>
+                            <div key={index} className={styles.skillCard}>
+                              <div className={styles.skillCardHeader}>
+                                <h4 className={styles.skillName}>
                                   {skill.name}
+                                </h4>
+                                <span
+                                  className={`${styles.proficiencyBadge} ${
+                                    styles[
+                                      (skill.proficiency || "Proficient").toLowerCase()
+                                    ] || ""
+                                  }`}
+                                >
+                                  {skill.proficiency || "Proficient"}
                                 </span>
-                                <span className={styles.skillLevel}>
-                                  {skill.level >= 90
-                                    ? "Expert"
-                                    : skill.level >= 70
-                                    ? "Advanced"
-                                    : skill.level >= 50
-                                    ? "Intermediate"
-                                    : "Beginner"}
-                                </span>
                               </div>
-                              <div className={styles.skillBar}>
-                                <div
-                                  className={styles.skillProgress}
-                                  style={{
-                                    width: `${skill.level}%`,
-                                    animationDelay: `${index * 0.1}s`,
-                                  }}
-                                ></div>
-                              </div>
-                              <div className={styles.skillStars}>
-                                {[...Array(5)].map((_, i) => (
-                                  <FaStar
-                                    key={i}
-                                    className={`
-                                    ${styles.star}
-                                    ${
-                                      i < Math.round(skill.level / 20)
-                                        ? styles.filledStar
-                                        : ""
-                                    }
-                                  `}
-                                  />
-                                ))}
-                              </div>
+                              {skill.tags && skill.tags.length > 0 && (
+                                <div className={styles.skillTagList}>
+                                  {skill.tags.map((tag, tagIdx) => (
+                                    <span
+                                      key={tagIdx}
+                                      className={styles.skillTag}
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           )
                         )}
