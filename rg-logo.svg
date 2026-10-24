@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .r-letter { fill: #007bff; }
+    .g-letter { fill: #ffffff; }
+    text {
+      font-family: Arial Black, sans-serif;
+      font-weight: bold;
+      font-size: 22px;
+    }
+  </style>
+  <rect width="32" height="32" fill="#242424"/>
+  <text x="1" y="24">
+    <tspan class="r-letter">R</tspan><tspan class="g-letter" dx="-2">G</tspan>
+  </text>
+</svg> 
