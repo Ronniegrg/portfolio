@@ -18,9 +18,6 @@ import {
   FaClock,
 } from "react-icons/fa";
 import React, { useState, useEffect } from "react";
-import omnistudioDeveloper from "../assets/omnistudioDeveloper.png";
-import platformDeveloper from "../assets/platformDeveloper.png";
-import salesforceAdmin from "../assets/salesforcecertifiedadministrator.png";
 import mcmaster from "../assets/mcmaster.jpg";
 import mohawk from "../assets/mohawk-college.png";
 import Modal from "../components/Modal";
@@ -38,9 +35,6 @@ import { pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = "/portfolio/pdf.worker.min.js";
 
 const logoMap = {
-  omnistudioDeveloper,
-  platformDeveloper,
-  salesforceAdmin,
   mcmaster,
   mohawk,
 };
@@ -89,9 +83,6 @@ const About = () => {
   };
   // Map education id to PDF file names in public folder
   const pdfFiles = {
-    1: "/portfolio/Cert2863203_OmniStudioDeveloper_20230109.pdf",
-    2: "/portfolio/Cert2595678_PlatformDeveloperI_20220926.pdf",
-    3: "/portfolio/Cert2499846_Administrator_20220817.pdf",
     4: "/portfolio/Web-Design.pdf",
     5: "/portfolio/Computer-System-Technology-Software-Development.pdf",
   };

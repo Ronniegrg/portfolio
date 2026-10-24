@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaFileAlt, FaArrowRight, FaCode } from "react-icons/fa";
-import developerImage from "../assets/software-developer.png";
 import styles from "./Home.module.css";
 import useGithubBio from "../hooks/useGithubBio";
 import { Helmet } from "react-helmet-async";
 import StructuredData from "../components/StructuredData";
+
+const developerImage = "/portfolio/rouni_gorgees.png";
 
 const Home = () => {
   const heroRef = useRef(null);
